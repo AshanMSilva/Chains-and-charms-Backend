@@ -26,7 +26,7 @@ orderRouter.route('/')
     }); 
 
 })
-.post(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
+.post(cors.corsWithOptions, (req, res, next) => {
     Orders.create(req.body).then(order =>{
         console.log('Order created', order);
         res.statusCode =200;
