@@ -67,7 +67,6 @@ app.use('/admin', adminRouter);
 app.use('/categories', categoryRouter);
 app.use('/orders', orderRouter);
 app.use('/products', productRouter);
-// app.use('/varients', varientRouter);
 app.use('/imageUpload',uploadRouter);
 app.use('/mail', mailRouter);
 

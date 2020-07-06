@@ -65,7 +65,7 @@ categoryRouter.route('/:categoryId')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 .get(cors.cors, (req,res,next) => {
     Categories.findById(req.params.categoryId)
-    .populate('subCategories')
+    // .populate('subCategories')
     .populate('products')
     .then(category =>{
         res.statusCode =200;
@@ -112,176 +112,11 @@ categoryRouter.route('/:categoryId')
     });
     });
 
-categoryRouter.route('/:categoryId/subCategories')
-.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-.get(cors.cors, (req,res,next) => {
-    Categories.findById(req.params.categoryId)
-    .populate('subCategories')
-    .populate('products')
-    .then((category) => {
-        if (category != null) {
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(category.subCategories);
-        }
-        else {
-            err = new Error('Category ' + req.params.categoryId + ' not found');
-            err.status = 404;
-            return next(err);
-        }
-    }, (err) => next(err))
-    .catch((err) => next(err));
-})
-.post(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
-    Categories.findById(req.params.categoryId)
-    .then((category) => {
-        if (category != null) {
-            // req.body.author = req.user._id;
-            category.subCategories.push(req.body.id);
-            category.save()
-            .then((category) => {
-                Categories.findById(category._id).populate('subCategories').populate('products').then(category =>{
-                    res.statusCode = 200;
-                    res.setHeader('Content-Type', 'application/json');
-                    res.json(category); 
-                })
-                               
-            }, (err) => next(err));
-        }
-        else {
-            err = new Error('Category ' + req.params.categoryId + ' not found');
-            err.status = 404;
-            return next(err);
-        }
-    }, (err) => next(err))
-    .catch((err) => next(err));
-})
-.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
-    res.statusCode = 403;
-    res.end('PUT operation not supported on /categories/'
-        + req.params.categoryId + '/subCategories');
-})
-.delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
-    Categories.findById(req.params.categoryId)
-    .then((category) => {
-        if (category != null) {
-            for (var i = (category.subCategories.length -1); i >= 0; i--) {
-                category.subCategories.id(category.subCategories[i]._id).remove();
-            }
-            category.save()
-            .then((category) => {
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.json(category);                
-            }, (err) => next(err));
-        }
-        else {
-            err = new Error('Category ' + req.params.categoryId + ' not found');
-            err.status = 404;
-            return next(err);
-        }
-    }, (err) => next(err))
-    .catch((err) => next(err));    
-});
-
-categoryRouter.route('/:categoryId/subCategories/:subCategoryId')
-.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-.get(cors.cors, (req,res,next) => {
-    Categories.findById(req.params.categoryId)
-    .populate('subCategories')
-    .then((category) => {
-        if (category != null && category.subCategories.id(req.params.subCategoryId) != null) {
-
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(category.subCategories.id(req.params.subCategoryId));
-        }
-        else if (category == null) {
-            err = new Error('Category' + req.params.categoryId + ' not found');
-            err.status = 404;
-            return next(err);
-        }
-        else {
-            err = new Error('SubCategories ' + req.params.subCategoryId + ' not found');
-            err.status = 404;
-            return next(err);            
-        }
-    }, (err) => next(err))
-    .catch((err) => next(err));
-})
-.post(cors.corsWithOptions, (req, res, next) => {
-    res.statusCode = 403;
-    res.end('POST operation not supported on /categories/'+ req.params.categoryId
-        + '/subCategories/' + req.params.subCategoryId);
-})
-.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
-    res.statusCode = 403;
-    res.end('PUT operation not supported on /categories/'+ req.params.categoryId
-        + '/subCategories/' + req.params.subCategoryId);
-})
-.delete(cors.corsWithOptions,authenticate.verifyAdmin, (req, res, next) => {
-    Categories.findById(req.params.categoryId)
-    .populate('subCategories')
-    .then((category) => {
-        if (category != null) {
-            let subCategories = category.subCategories;
-            var ind = null;
-            for (let index = 0; index < subCategories.length; index++) {
-                const cat = subCategories[index];
-                // console.log(typeof(req.params.subCategoryId));
-                // console.log(typeof(cat._id,this.toString()));
-                if(cat._id.toString() === req.params.subCategoryId){
-                    ind = index;
-                    
-                    break;
-                }
-                
-            }
-            // console.log(ind);
-            if(ind !=null){
-                category.subCategories.splice(ind,1);
-                category.save()
-                .then((category) => {
-                    Categories.findById(category._id).populate('subCategories').populate('products').then(category =>{
-                        res.statusCode = 200;
-                        res.setHeader('Content-Type', 'application/json');
-                        res.json(category);
-                    })
-                                    
-                }, (err) => next(err));
-            }
-            else {
-                err = new Error('Sub Category ' + req.params.subCategoryId + ' not found');
-                err.status = 404;
-                return next(err);            
-            }
-            // if(req.user._id.equals(category.subCategories.id(req.params.subCategorytId).author)){
-                // category.subCategories.id(req.params.subCategoryId).remove();
-                
-            // }
-            // else{
-            //     err = new Error('Only author can update a comment');
-            //     err.status = 403;
-            //     return next(err);
-            // }
-            
-        }
-        else{
-            err = new Error('Category ' + req.params.categoryId + ' not found');
-            err.status = 404;
-            return next(err);
-        }
-        
-    }, (err) => next(err))
-    .catch((err) => next(err));
-});
-
-
 categoryRouter.route('/:categoryId/products')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 .get(cors.cors, (req,res,next) => {
     Categories.findById(req.params.categoryId)
-    .populate('subCategories')
+    // .populate('subCategories')
     .populate('products')
     .then((category) => {
         if (category != null) {
@@ -305,7 +140,7 @@ categoryRouter.route('/:categoryId/products')
             category.products.push(req.body.id);
             category.save()
             .then((category) => {
-                Categories.findById(category._id).populate('subCategories').populate('products').then(category =>{
+                Categories.findById(category._id).populate('products').then(category =>{
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'application/json');
                     res.json(category); 
@@ -363,7 +198,7 @@ categoryRouter.route('/:categoryId/products/:productId')
 
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(category.subCategories.id(req.params.productId));
+            res.json(category.products.id(req.params.productId));
         }
         else if (category == null) {
             err = new Error('Category' + req.params.categoryId + ' not found');
@@ -396,10 +231,10 @@ categoryRouter.route('/:categoryId/products/:productId')
             let products = category.products;
             var ind = null;
             for (let index = 0; index < products.length; index++) {
-                const cat = products[index];
+                const prod = products[index];
                 // console.log(typeof(req.params.subCategoryId));
                 // console.log(typeof(cat._id,this.toString()));
-                if(cat._id.toString() === req.params.productId){
+                if(prod._id.toString() === req.params.productId){
                     ind = index;
                     
                     break;
@@ -410,7 +245,7 @@ categoryRouter.route('/:categoryId/products/:productId')
                 category.products.splice(ind,1);
                 category.save()
                 .then((category) => {
-                    Categories.findById(category._id).populate('subCategories').populate('products').then(category =>{
+                    Categories.findById(category._id).populate('products').then(category =>{
                         res.statusCode = 200;
                         res.setHeader('Content-Type', 'application/json');
                         res.json(category);

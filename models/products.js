@@ -39,6 +39,10 @@ var productSchema = new Schema({
         type: String,
         required:true
     },
+    dealer:{
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Dealer'
+    },
     name: {
         type: String,
         required: true
