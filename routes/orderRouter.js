@@ -26,7 +26,7 @@ orderRouter.route('/')
     }); 
 
 })
-.post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+.post(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Orders.create(req.body).then(order =>{
         console.log('Order created', order);
         res.statusCode =200;
@@ -38,11 +38,11 @@ orderRouter.route('/')
         next(err);
     }); 
 })
-.put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /Orders');
 })
-.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Orders.remove({}).then(response =>{
         res.statusCode =200;
         res.setHeader('Content-Type', 'application/json');
@@ -69,12 +69,12 @@ orderRouter.route('/:orderId')
     }); 
 })
 
-.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyUser,(req, res, next) => {
+.post(cors.corsWithOptions, authenticate.verifyAdmin,(req, res, next) => {
     res.statusCode = 403;
     res.end('POST operation not supported on /orders/'+ req.params.orderId);
 })
 
-.put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Orders.findByIdAndUpdate(req.params.orderId,{
         $set: req.body
     },
@@ -91,7 +91,7 @@ orderRouter.route('/:orderId')
     }); 
 })
 
-.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Orders.findByIdAndRemove(req.params.orderId).then(response =>{
         res.statusCode =200;
         res.setHeader('Content-Type', 'application/json');
@@ -121,7 +121,7 @@ orderRouter.route('/:orderId/orderItems')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.post(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Orders.findById(req.params.orderId)
     .then((order) => {
         if (order != null) {
@@ -145,12 +145,12 @@ orderRouter.route('/:orderId/orderItems')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /orders/'
         + req.params.orderId + '/orderItems');
 })
-.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Orders.findById(req.params.orderId)
     .then((order) => {
         if (order != null) {
@@ -202,7 +202,7 @@ orderRouter.route('/:orderId/orderItems/:itemId')
     res.end('POST operation not supported on /orders/'+ req.params.orderId
         + '/orderItems/' + req.params.itemId);
 })
-.put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Orders.findById(req.params.orderId)
     .then((order) => {
         if (order != null && order.orderItems.id(req.params.itemId) != null) {
@@ -243,7 +243,7 @@ orderRouter.route('/:orderId/orderItems/:itemId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Orders.findById(req.params.orderId)
     .then((order) => {
         if (order != null && order.orderItems.id(req.params.itemId) != null) {

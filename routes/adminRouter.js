@@ -13,7 +13,7 @@ adminRouter.use(bodyParser.json());
 
 
 adminRouter.options('/', cors.corsWithOptions, (req, res) => { res.sendStatus(200); });
-adminRouter.get('/', cors.cors, function(req, res, next) {
+adminRouter.get('/', cors.cors, authenticate.verifyAdmin, function(req, res, next) {
   Admin.find(req.query)
     .then(users =>{
         res.statusCode =200;
@@ -67,7 +67,7 @@ adminRouter.post('/signup', cors.corsWithOptions, (req, res, next) => {
 
 adminRouter.post('/login', cors.corsWithOptions, (req, res, next) => {
 
-  passport.authenticate('adminLocal', (err, user, info) => {
+  passport.authenticate('local', (err, user, info) => {
     if (err)
       return next(err);
 
@@ -93,7 +93,7 @@ adminRouter.post('/login', cors.corsWithOptions, (req, res, next) => {
 
 adminRouter.route('/:adminId/changepassword')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-.post(cors.corsWithOptions, authenticate.verifyUser,authenticate.verifyAdmin, (req,res,next) => {
+.post(cors.corsWithOptions, authenticate.verifyAdmin, (req,res,next) => {
 
   Admin.findOne({ _id: req.params.adminId },(err, user) => {
     // Check if error connecting
@@ -145,7 +145,7 @@ adminRouter.route('/:adminId/forgotpassword')
 });
 
 adminRouter.route('/:userId')
-.options(cors.corsWithOptions,authenticate.verifyUser, authenticate.verifyAdmin, (req, res) => { res.sendStatus(200); })
+.options(cors.corsWithOptions, authenticate.verifyAdmin, (req, res) => { res.sendStatus(200); })
 .get(cors.cors, (req,res,next) => {
     Admin.findById(req.params.userId)
     .then(user =>{
@@ -159,12 +159,12 @@ adminRouter.route('/:userId')
     }); 
 })
 
-.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.post(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     res.statusCode = 403;
     res.end('POST operation not supported on /users/'+ req.params.userId);
 })
 
-.put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Admin.findByIdAndUpdate(req.params.userId,{
         $set: req.body
     },
@@ -181,7 +181,7 @@ adminRouter.route('/:userId')
     }); 
 })
 
-.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Admin.findByIdAndRemove(req.params.userId).then(response =>{
         res.statusCode =200;
         res.setHeader('Content-Type', 'application/json');

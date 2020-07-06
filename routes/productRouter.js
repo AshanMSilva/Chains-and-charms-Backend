@@ -27,7 +27,7 @@ productRouter.route('/')
     }); 
 
 })
-.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.post(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Products.create(req.body).then(product =>{
         console.log('Product created', product);
         res.statusCode =200;
@@ -39,11 +39,11 @@ productRouter.route('/')
         next(err);
     }); 
 })
-.put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /categories');
 })
-.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Products.remove({}).then(response =>{
         res.statusCode =200;
         res.setHeader('Content-Type', 'application/json');
@@ -70,12 +70,12 @@ productRouter.route('/:productId')
     }); 
 })
 
-.post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+.post(cors.corsWithOptions, (req, res, next) => {
     res.statusCode = 403;
     res.end('POST operation not supported on /products/'+ req.params.productId);
 })
 
-.put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Products.findByIdAndUpdate(req.params.productId,{
         $set: req.body
     },
@@ -92,7 +92,7 @@ productRouter.route('/:productId')
     }); 
 })
 
-.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Products.findByIdAndRemove(req.params.productId).then(response =>{
         res.statusCode =200;
         res.setHeader('Content-Type', 'application/json');
@@ -122,7 +122,7 @@ productRouter.route('/:productId/varients')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.post(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Products.findById(req.params.productId)
     .then((product) => {
         if (product != null) {
@@ -146,12 +146,12 @@ productRouter.route('/:productId/varients')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /products/'
         + req.params.productId + '/varients');
 })
-.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Products.findById(req.params.productId)
     .then((product) => {
         if (product != null) {
@@ -203,7 +203,7 @@ productRouter.route('/:productId/varients/:varientId')
     res.end('POST operation not supported on /products/'+ req.params.productId
         + '/varients/' + req.params.varientId);
 })
-.put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Products.findById(req.params.productId)
     .then((product) => {
         if (product != null && product.varients.id(req.params.varientId) != null) {
@@ -238,7 +238,7 @@ productRouter.route('/:productId/varients/:varientId')
     .catch((err) => next(err));
     
 })
-.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Products.findById(req.params.productId)
     .then((product) => {
         if (product != null && product.varients.id(req.params.varientId) != null) {
@@ -298,7 +298,7 @@ productRouter.route('/:productId/varients/:varientId/attributes')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.post(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Products.findById(req.params.productId)
     .then((product) => {
         if (product != null && product.varients.id(req.params.varientId) != null) {
@@ -328,12 +328,12 @@ productRouter.route('/:productId/varients/:varientId/attributes')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /varients/'
         + req.params.varientId + '/attributes');
 })
-.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Products.findById(req.params.productId)
     .then((product) => {
         if (product != null && product.varients.id(req.params.varientId) != null) {
@@ -394,7 +394,7 @@ productRouter.route('/:productId/varients/:varientId/attributes/:attributeId')
     res.end('POST operation not supported on /varients/'+ req.params.varientId
         + '/attributes/' + req.params.attributeId);
 })
-.put(cors.corsWithOptions, authenticate.verifyUser,authenticate.verifyAdmin, (req, res, next) => {
+.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Products.findById(req.params.productId)
     .then((product) => {
         if (product != null && product.varients.id(req.params.varientId) != null && product.varients.id(req.params.varientId).attributes.id(req.params.attributeId) != null) {
@@ -429,7 +429,7 @@ productRouter.route('/:productId/varients/:varientId/attributes/:attributeId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Products.findById(req.params.productId)
     .then((product) => {
         if (product != null && product.varients.id(req.params.varientId) != null && product.varients.id(req.params.varientId).attributes.id(req.params.attributeId) != null) {

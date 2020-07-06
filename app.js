@@ -11,7 +11,7 @@ var config = require('./config');
 
 
 
-var usersRouter = require('./routes/users');
+// var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/adminRouter');
 var categoryRouter = require('./routes/categoryRouter');
 var productRouter = require('./routes/productRouter');
@@ -58,7 +58,7 @@ app.use(passport.initialize());
 // app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/users', usersRouter);
+// app.use('/users', usersRouter);
 app.use('/admin', adminRouter);
 
 

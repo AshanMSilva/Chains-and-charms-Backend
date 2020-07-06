@@ -33,7 +33,7 @@ categoryRouter.route('/')
     }); 
 
 })
-.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.post(cors.corsWithOptions,authenticate.verifyAdmin, (req, res, next) => {
     Categories.create(req.body).then(category =>{
         console.log('Ctegory created', category);
         res.statusCode =200;
@@ -45,11 +45,11 @@ categoryRouter.route('/')
         next(err);
     }); 
 })
-.put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /categories');
 })
-.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Categories.remove({}).then(response =>{
         res.statusCode =200;
         res.setHeader('Content-Type', 'application/json');
@@ -78,12 +78,12 @@ categoryRouter.route('/:categoryId')
     }); 
 })
 
-.post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+.post(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     res.statusCode = 403;
     res.end('POST operation not supported on /categories/'+ req.params.categoryId);
 })
 
-.put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Categories.findByIdAndUpdate(req.params.categoryId,{
         $set: req.body
     },
@@ -100,7 +100,7 @@ categoryRouter.route('/:categoryId')
     }); 
 })
 
-.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Categories.findByIdAndRemove(req.params.categoryId).then(response =>{
         res.statusCode =200;
         res.setHeader('Content-Type', 'application/json');
@@ -132,7 +132,7 @@ categoryRouter.route('/:categoryId/subCategories')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.post(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Categories.findById(req.params.categoryId)
     .then((category) => {
         if (category != null) {
@@ -156,12 +156,12 @@ categoryRouter.route('/:categoryId/subCategories')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /categories/'
         + req.params.categoryId + '/subCategories');
 })
-.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Categories.findById(req.params.categoryId)
     .then((category) => {
         if (category != null) {
@@ -214,12 +214,12 @@ categoryRouter.route('/:categoryId/subCategories/:subCategoryId')
     res.end('POST operation not supported on /categories/'+ req.params.categoryId
         + '/subCategories/' + req.params.subCategoryId);
 })
-.put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /categories/'+ req.params.categoryId
         + '/subCategories/' + req.params.subCategoryId);
 })
-.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.delete(cors.corsWithOptions,authenticate.verifyAdmin, (req, res, next) => {
     Categories.findById(req.params.categoryId)
     .populate('subCategories')
     .then((category) => {
@@ -297,7 +297,7 @@ categoryRouter.route('/:categoryId/products')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.post(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Categories.findById(req.params.categoryId)
     .then((category) => {
         if (category != null) {
@@ -321,12 +321,12 @@ categoryRouter.route('/:categoryId/products')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /categories/'
         + req.params.categoryId + '/products');
 })
-.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Categories.findById(req.params.categoryId)
     .then((category) => {
         if (category != null) {
@@ -383,12 +383,12 @@ categoryRouter.route('/:categoryId/products/:productId')
     res.end('POST operation not supported on /categories/'+ req.params.categoryId
         + '/products/' + req.params.productId);
 })
-.put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /categories/'+ req.params.categoryId
         + '/products/' + req.params.productId);
 })
-.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Categories.findById(req.params.categoryId)
     .populate('products')
     .then((category) => {
