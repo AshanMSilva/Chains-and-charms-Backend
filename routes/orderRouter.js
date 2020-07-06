@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('./cors');
 
-const Orders = require('../models/varients');
+const Orders = require('../models/orders');
 var authenticate = require('../authenticate');
 
 

@@ -24,7 +24,7 @@ const mongoose = require('mongoose');
 const categories = require('./models/categories');
 const products = require('./models/products');
 const orders = require('./models/orders');
-// const varients = require('./models/varients');
+
 
 // const url = 'mongodb://localhost:27017/conFusion';
 const url = config.mongoUrl;
