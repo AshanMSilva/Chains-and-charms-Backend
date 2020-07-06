@@ -11,7 +11,7 @@ var adminRouter = express.Router();
 adminRouter.use(bodyParser.json());
 
 
-/* GET users listing. */
+
 adminRouter.options('/', cors.corsWithOptions, (req, res) => { res.sendStatus(200); });
 adminRouter.get('/', cors.cors, function(req, res, next) {
   Admin.find(req.query)
@@ -159,7 +159,7 @@ adminRouter.route('/:userId')
     }); 
 })
 
-.post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     res.statusCode = 403;
     res.end('POST operation not supported on /users/'+ req.params.userId);
 })

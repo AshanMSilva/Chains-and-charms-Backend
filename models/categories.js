@@ -12,18 +12,10 @@ var categorySchema = new Schema({
     image: {
         type: String
     },
-    subCategories: [{
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Category'
-    }],
     products: [{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Product'
-    }],
-    topCategory: {
-        type: Boolean, 
-        default: true
-    }
+    }]
 }, {
     timestamps: true
 });

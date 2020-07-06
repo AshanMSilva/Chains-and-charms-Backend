@@ -20,7 +20,7 @@ categoryRouter.route('/')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 .get(cors.cors, (req,res,next) => {
     Categories.find(req.query)
-    .populate('subCategories')
+    // .populate('subCategories')
     .populate('products')
     .then(categories =>{
         res.statusCode =200;

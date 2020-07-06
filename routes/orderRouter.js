@@ -26,7 +26,7 @@ orderRouter.route('/')
     }); 
 
 })
-.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
     Orders.create(req.body).then(order =>{
         console.log('Order created', order);
         res.statusCode =200;
@@ -40,7 +40,7 @@ orderRouter.route('/')
 })
 .put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
     res.statusCode = 403;
-    res.end('PUT operation not supported on /varients');
+    res.end('PUT operation not supported on /Orders');
 })
 .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     Orders.remove({}).then(response =>{
@@ -69,7 +69,7 @@ orderRouter.route('/:orderId')
     }); 
 })
 
-.post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyUser,(req, res, next) => {
     res.statusCode = 403;
     res.end('POST operation not supported on /orders/'+ req.params.orderId);
 })
