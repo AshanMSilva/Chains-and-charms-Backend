@@ -12,10 +12,10 @@ var categorySchema = new Schema({
     image: {
         type: String
     },
-    products: [{
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Product'
-    }]
+    // products: [{
+    //     type: mongoose.Schema.Types.ObjectId, 
+    //     ref: 'Product'
+    // }]
 }, {
     timestamps: true
 });
