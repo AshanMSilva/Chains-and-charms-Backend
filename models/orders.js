@@ -42,11 +42,13 @@ var itemSchema = new Schema({
     },
     quantity: {
         type: Number,
-        required: true
+        required: true,
+        min: 0
     },
     cost:{
         type: Number,
-        required: true
+        required: true,
+        min: 0
     }
 });
 
@@ -61,7 +63,7 @@ var orderSchema = new Schema({
         default: 'Proccessing'
     },
     orderedDate: {
-        type: Date, 
+        type: Date,
         default: Date.now()
     },
     expiredDate:{
