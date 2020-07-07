@@ -9,7 +9,7 @@ var attributeSchema = new Schema({
     },
     value:{
         type: String
-       
+
     }
 },{
     timestamps: true
@@ -26,7 +26,7 @@ var varientSchema = new Schema({
     },
     attributes: [attributeSchema],
     sales: {
-        type: Number, 
+        type: Number,
         default: 0
     }
 }, {
@@ -40,7 +40,7 @@ var productSchema = new Schema({
         required:true
     },
     dealer:{
-        type: mongoose.Schema.Types.ObjectId, 
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Dealer'
     },
     name: {
@@ -52,8 +52,12 @@ var productSchema = new Schema({
     },
     varients: [varientSchema],
     sales: {
-        type: Number, 
+        type: Number,
         default: 0
+    },
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Product'
     }
 }, {
     timestamps: true
