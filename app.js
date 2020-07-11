@@ -30,13 +30,12 @@ const dealers = require('./models/dealers');
 
 // const url = 'mongodb://localhost:27017/conFusion';
 const url = config.mongoUrl;
-const connect = mongoose.connect(url);
-
-connect.then((db)=>{
-  console.log('Connected correctly to server');
-}, (err)=>{
-  console.log(err);
-});
+mongoose.connect(url, {'useNewUrlParser': true, 'useCreateIndex': true, 'useUnifiedTopology': true})
+    .then(() => console.log(`Connected to DB ${url}`))  
+    .catch(err => {
+        console.log(`Couldn't connect to DB ${url}`);
+        console.log(err);
+    })
 
 var app = express();
 
@@ -62,10 +61,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use('/users', usersRouter);
 app.use('/admin', adminRouter);
-
-
-
-
 app.use('/categories', categoryRouter);
 app.use('/orders', orderRouter);
 app.use('/products', productRouter);
@@ -75,18 +70,18 @@ app.use('/dealers', dealerRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+    next(createError(404));
 });
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.json(err.message);
+    // render the error page
+    res.status = (err.status || 500);
+    res.json({err: err.message});
 });
 
 module.exports = app;

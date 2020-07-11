@@ -5,11 +5,11 @@ var passportLocalMongoose = require('passport-local-mongoose');
 var Admin = new Schema({
     firstName: {
         type: String,
-        // required: true
+        required: [true, 'first name of the admin user is required']
     },
     lastName:{
         type: String,
-        // required: true
+        required: [true, 'last name of the admin user is required']
     },
     image: {
         type: String,
