@@ -36,6 +36,24 @@ adminRouter.get('/', cors.cors, authenticate.verifyAdmin, function(req, res, nex
             next(err);
         });
 });
+adminRouter.get('/checkJWTtoken', cors.corsWithOptions, (req, res) => {
+    passport.authenticate('jwt', {session: false}, (err, user, info) => {
+      if (err)
+        return next(err);
+      
+      if (!user) {
+        res.statusCode = 401;
+        res.setHeader('Content-Type', 'application/json');
+        return res.json({status: 'JWT invalid!', success: false, err: info});
+      }
+      else {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        return res.json({status: 'JWT valid!', success: true, user: user});
+  
+      }
+    }) (req, res);
+  });
 
 adminRouter.post('/signup', cors.corsWithOptions, (req, res, next) => {
     const schema = Joi.object({
@@ -76,7 +94,7 @@ adminRouter.post('/signup', cors.corsWithOptions, (req, res, next) => {
                     res.json({err: err});
                     return;
                 }
-                passport.authenticate('adminLocal')(req, res, () => {
+                passport.authenticate('local')(req, res, () => {
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'application/json');
                     res.json(user);
@@ -94,7 +112,7 @@ adminRouter.post('/signup', cors.corsWithOptions, (req, res, next) => {
 
 adminRouter.post('/login', cors.corsWithOptions, (req, res, next) => {
     const schema = Joi.object({
-        email: Joi.string().min(5).max(25).required(),
+        email: Joi.string().min(5).max(50).required(),
         password: Joi.string().max(50).required()
     })
     const {error} = schema.validate(req.body);
