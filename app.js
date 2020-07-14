@@ -20,12 +20,14 @@ var orderRouter = require('./routes/orderRouter');
 var uploadRouter = require('./routes/uploadRouter');
 var mailRouter = require('./routes/mailRouter');
 var dealerRouter = require('./routes/dealerRouter');
+var contactRouter = require('./routes/contactRouter');
 
 const mongoose = require('mongoose');
 const categories = require('./models/categories');
 const products = require('./models/products');
 const orders = require('./models/orders');
 const dealers = require('./models/dealers');
+const feedbacks = require('./models/feedbacks');
 
 
 // const url = 'mongodb://localhost:27017/conFusion';
@@ -67,6 +69,7 @@ app.use('/products', productRouter);
 app.use('/imageUpload',uploadRouter);
 app.use('/mail', mailRouter);
 app.use('/dealers', dealerRouter);
+app.use('/contact', contactRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
