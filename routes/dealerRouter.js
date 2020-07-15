@@ -20,7 +20,7 @@ dealerRouter.route('/')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 .get(cors.cors, (req,res,next) => {
     Dealers.find(req.query)
-    .then(delaers =>{
+    .then(dealers =>{
         res.statusCode =200;
         res.setHeader('Content-Type', 'application/json');
         res.json(dealers);
