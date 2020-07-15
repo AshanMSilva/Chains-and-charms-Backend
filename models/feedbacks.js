@@ -18,6 +18,10 @@ var feedbackSchema = new Schema({
     message: {
         type : String,
         required : true
+    },
+    markAsRead : {
+        type : Boolean,
+        default : false
     }
 });
 
