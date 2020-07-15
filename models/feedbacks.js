@@ -22,7 +22,13 @@ var feedbackSchema = new Schema({
     markAsRead : {
         type : Boolean,
         default : false
+    },
+    deleted : {
+        type : Boolean,
+        default : false
     }
+}, {
+    timestamps: true
 });
 
 var Feedbacks = mongoose.model('feedback', feedbackSchema);

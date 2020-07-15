@@ -10,7 +10,7 @@ contactRouter.use(bodyParser.json());
 
 contactRouter.route('/')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-.get(cors.cors,  authenticate.verifyAdmin, (req, res, next) => { 
+.get(cors.cors,  authenticate.verifyAdmin,(req, res, next) => {
     Feedbacks.find({})
     .then(feedbacks =>{
         res.statusCode =200;
@@ -44,6 +44,53 @@ contactRouter.route('/')
     res.statusCode = 403;
     res.end('DELETE operation not supported on /contact');
 });
+
+
+contactRouter.route('/:feedbackId')
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+.get(cors.cors, (req,res,next) => {
+    res.statusCode = 403;
+    res.end('GET operation not supported on /contact/'+ req.params.feedbackId);
+})
+
+.post(cors.corsWithOptions, (req, res, next) => {
+    res.statusCode = 403;
+    res.end('POST operation not supported on /contact/'+ req.params.feedbackId);
+})
+
+.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
+    Feedbacks.findByIdAndUpdate(req.params.feedbackId,{
+        $set: req.body
+    },
+    {
+        new: true
+    }).then(feedback =>{
+        res.statusCode =200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(feedback);
+    }, err =>{
+        next(err);
+    }).catch(err =>{
+        next(err);
+    });
+})
+
+.delete(cors.corsWithOptions, authenticate.verifyAdmin,  (req, res, next) => {
+    Feedbacks.findByIdAndUpdate(req.params.feedbackId,{
+        $set: req.body
+    },
+    {
+          new : true
+    }).then(feedback =>{
+        res.statusCode =200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(feedback);
+    }, err =>{
+        next(err);
+    }).catch(err =>{
+        next(err);
+    });
+    });
 
 
 module.exports = contactRouter;
