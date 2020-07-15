@@ -247,7 +247,8 @@ adminRouter.route('/:userId')
     const schema = Joi.object({
         email: Joi.string().email({minDomainSegments: 2}).min(5).max(50),        
         firstName: Joi.string().min(3).max(25),
-        lastName: Joi.string().min(3).max(25)
+        lastName: Joi.string().min(3).max(25),
+        image: Joi.string().min(3).max(300)
     })
     let {error} = schema.validate(req.body, {abortEarly: false});
     if (error) {
