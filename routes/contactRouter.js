@@ -11,7 +11,7 @@ contactRouter.use(bodyParser.json());
 contactRouter.route('/')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 .get(cors.cors,  authenticate.verifyAdmin,(req, res, next) => {
-    Feedbacks.find({})
+    Feedbacks.find(req.query)
     .then(feedbacks =>{
         res.statusCode =200;
         res.setHeader('Content-Type', 'application/json');
