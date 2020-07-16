@@ -258,18 +258,34 @@ adminRouter.route('/:userId')
         });
         return res.status(400).send({err: err_list});
     }
+    if(req.body.email){
+        Admin.findOne({ email: req.body.email },(err, user) => {
+            if(err){
+                next(err);
+            }
+            if(user){
+                res.statusCode = 400;
+                // next(err);
+                res.setHeader('Content-Type', 'application/json');
+                res.json({err: 'That Email Address already exists.'});
+            }
+            if(!user){
+                Admin.findByIdAndUpdate(req.params.userId, { $set: req.body }, { new: true })
+                .then(user =>{
+                    res.statusCode =200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json(user);
+                }, err =>{
+                    next(err);
+                })
+                .catch(err =>{
+                    next(err);
+                });
+            }
+        })
+    }
 
-    Admin.findByIdAndUpdate(req.params.userId, { $set: req.body }, { new: true })
-    .then(user =>{
-        res.statusCode =200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(user);
-    }, err =>{
-        next(err);
-    })
-    .catch(err =>{
-        next(err);
-    });
+    
 })
 
 .delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
