@@ -35,9 +35,9 @@ const categoryStorage = multer.diskStorage({
 });
 const categoryUpload = multer({ storage: categoryStorage, fileFilter: imageFileFilter});
 
-const dealerStorage = multer.diskStorage({
+const varietyStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'public/images/dealers');
+        cb(null, 'public/images/varieties');
     },
 
     filename: (req, file, cb) => {
@@ -45,7 +45,7 @@ const dealerStorage = multer.diskStorage({
         cb(null, String(req.params.id)+'.'+extension)
     }
 });
-const dealerUpload = multer({ storage: dealerStorage, fileFilter: imageFileFilter});
+const varietyUpload = multer({ storage: varietyStorage, fileFilter: imageFileFilter});
 
 
 const productStorage = multer.diskStorage({
@@ -122,13 +122,13 @@ uploadRouter.route('/category/:id')
     res.end('DELETE operation not supported on /imageUpload');
 });
 
-uploadRouter.route('/dealer/:id')
+uploadRouter.route('/variety/:id')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 .get(cors.cors, authenticate.verifyAdmin, (req, res, next) => {
     res.statusCode = 403;
     res.end('GET operation not supported on /imageUpload');
 })
-.post(cors.corsWithOptions, authenticate.verifyAdmin, dealerUpload.single('imageFile'), (req, res) => {
+.post(cors.corsWithOptions, authenticate.verifyAdmin, varietyUpload.single('imageFile'), (req, res) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.json(req.file);

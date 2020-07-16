@@ -3,15 +3,15 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('./cors');
 
-const Dealers = require('../models/dealers');
+const Varieties = require('../models/varieties');
 var authenticate = require('../authenticate');
 
 
-const dealerRouter = express.Router();
+const varietyRouter = express.Router();
 
-dealerRouter.use(bodyParser.json());
+varietyRouter.use(bodyParser.json());
 
-dealerRouter.route('/')
+varietyRouter.route('/')
 // .all((req,res,next) => {
 //     res.statusCode = 200;
 //     res.setHeader('Content-Type', 'text/plain');
@@ -19,11 +19,11 @@ dealerRouter.route('/')
 // })
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 .get(cors.cors, (req,res,next) => {
-    Dealers.find(req.query)
-    .then(dealers =>{
+    Varieties.find(req.query)
+    .then(varieties =>{
         res.statusCode =200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(dealers);
+        res.json(varieties);
     }, err =>{
         next(err);
     }).catch(err =>{
@@ -32,10 +32,10 @@ dealerRouter.route('/')
 
 })
 .post(cors.corsWithOptions,authenticate.verifyAdmin, (req, res, next) => {
-    Dealers.create(req.body).then(dealer =>{
+    Varieties.create(req.body).then(variety =>{
         res.statusCode =200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(dealer);
+        res.json(variety);
     }, err =>{
         next(err);
     }).catch(err =>{
@@ -44,10 +44,10 @@ dealerRouter.route('/')
 })
 .put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     res.statusCode = 403;
-    res.end('PUT operation not supported on /dealers');
+    res.end('PUT operation not supported on /varieties');
 })
 .delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
-    Dealers.remove({}).then(response =>{
+    Varieties.remove({}).then(response =>{
         res.statusCode =200;
         res.setHeader('Content-Type', 'application/json');
         res.json(response); 
@@ -58,14 +58,14 @@ dealerRouter.route('/')
     });
 });
 
-dealerRouter.route('/:dealerId')
+varietyRouter.route('/:varietyId')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 .get(cors.cors, (req,res,next) => {
-    Dealers.findById(req.params.dealerId)
-    .then(dealer =>{
+    Varieties.findById(req.params.varietyId)
+    .then(variety =>{
         res.statusCode =200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(dealer);
+        res.json(variety);
     }, err =>{
         next(err);
     }).catch(err =>{
@@ -75,19 +75,19 @@ dealerRouter.route('/:dealerId')
 
 .post(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     res.statusCode = 403;
-    res.end('POST operation not supported on /dealers/'+ req.params.dealerId);
+    res.end('POST operation not supported on /varieties/'+ req.params.varietyId);
 })
 
 .put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
-    Dealers.findByIdAndUpdate(req.params.dealerId,{
+    Varieties.findByIdAndUpdate(req.params.varietyId,{
         $set: req.body
     },
     {
         new: true
-    }).then(dealer =>{
+    }).then(variety =>{
         res.statusCode =200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(dealer);
+        res.json(variety);
     }, err =>{
         next(err);
     }).catch(err =>{
@@ -96,7 +96,7 @@ dealerRouter.route('/:dealerId')
 })
 
 .delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
-    Dealers.findByIdAndRemove(req.params.dealerId).then(response =>{
+    Varieties.findByIdAndRemove(req.params.varietyId).then(response =>{
         res.statusCode =200;
         res.setHeader('Content-Type', 'application/json');
         res.json(response); 
@@ -107,4 +107,4 @@ dealerRouter.route('/:dealerId')
     });
 });
 
-module.exports = dealerRouter;
+module.exports = varietyRouter;

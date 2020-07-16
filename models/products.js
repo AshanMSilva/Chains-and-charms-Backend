@@ -39,9 +39,9 @@ var productSchema = new Schema({
         type: String,
         required:true
     },
-    dealer:{
+    variety:{
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Dealer'
+        ref: 'Variety'
     },
     category:{
         type: mongoose.Schema.Types.ObjectId, 

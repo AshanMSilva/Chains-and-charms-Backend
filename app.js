@@ -19,14 +19,14 @@ var orderRouter = require('./routes/orderRouter');
 // var varientRouter = require('./routes/varientRouter');
 var uploadRouter = require('./routes/uploadRouter');
 var mailRouter = require('./routes/mailRouter');
-var dealerRouter = require('./routes/dealerRouter');
+var varietyRouter = require('./routes/varietyRouter');
 var contactRouter = require('./routes/contactRouter');
 
 const mongoose = require('mongoose');
 const categories = require('./models/categories');
 const products = require('./models/products');
 const orders = require('./models/orders');
-const dealers = require('./models/dealers');
+const varieties = require('./models/varieties');
 const feedbacks = require('./models/feedbacks');
 
 
@@ -68,7 +68,7 @@ app.use('/orders', orderRouter);
 app.use('/products', productRouter);
 app.use('/imageUpload',uploadRouter);
 app.use('/mail', mailRouter);
-app.use('/dealers', dealerRouter);
+app.use('/varieties', varietyRouter);
 app.use('/contact', contactRouter);
 
 // catch 404 and forward to error handler

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-var dealerSchema = new Schema({
+var varietySchema = new Schema({
     name: {
         type: String,
         required: true,
@@ -15,6 +15,6 @@ var dealerSchema = new Schema({
 });
 
 
-var Dealers = mongoose.model('Dealer', dealerSchema);
+var Varieties = mongoose.model('Variety', varietySchema);
 
-module.exports = Dealers;
+module.exports = Varieties;
