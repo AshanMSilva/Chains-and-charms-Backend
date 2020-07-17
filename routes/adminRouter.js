@@ -248,7 +248,7 @@ adminRouter.route('/:userId')
         email: Joi.string().email({minDomainSegments: 2}).min(5).max(50),        
         firstName: Joi.string().min(3).max(25),
         lastName: Joi.string().min(3).max(25),
-        image: Joi.string().min(3).max(300)
+        image: Joi.string().min(3)
     })
     let {error} = schema.validate(req.body, {abortEarly: false});
     if (error) {
@@ -283,6 +283,22 @@ adminRouter.route('/:userId')
                 });
             }
         })
+    }
+    else{
+        Admin.findByIdAndUpdate(req.params.userId,{
+            $set: req.body
+        },
+        {
+            new: true
+        }).then(user =>{
+            res.statusCode =200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(user);
+        }, err =>{
+            next(err);
+        }).catch(err =>{
+            next(err);
+        }); 
     }
 
     
