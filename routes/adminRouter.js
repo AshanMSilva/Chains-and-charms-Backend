@@ -14,7 +14,7 @@ adminRouter.use(bodyParser.json());
 
 adminRouter.options('/', cors.corsWithOptions, (req, res) => { res.sendStatus(200); });
 
-adminRouter.get('/', cors.cors, authenticate.verifyAdmin, function(req, res, next) {
+adminRouter.get('/', cors.cors, function(req, res, next) {
     console.log(req.query);
     let err_list = [];
     let key_arr = ['firstName', 'lastName', 'email'];
