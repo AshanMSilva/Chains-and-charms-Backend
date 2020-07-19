@@ -8,6 +8,7 @@ const Joi = require('@hapi/joi');
 Joi.objectId = require('joi-objectid')(Joi);
 
 var authenticate = require('../authenticate');
+const validater = require('../validation/adminValidation');
 
 var adminRouter = express.Router();
 adminRouter.use(bodyParser.json());
@@ -16,13 +17,7 @@ adminRouter.options('/', cors.corsWithOptions, (req, res) => { res.sendStatus(20
 
 adminRouter.get('/', cors.cors, function(req, res, next) {
     console.log(req.query);
-    let err_list = [];
-    let key_arr = ['firstName', 'lastName', 'email'];
-    Object.keys(req.query).forEach(element => {
-        if (!key_arr.includes(element)) err_list.push(`${element} is an invalid query parameter.`);
-        // const {error} = Joi.string().min(3).max(25).validate(req.query[element]);
-        // if(error) err_list.push(error.details[0].message.replace('value', `${element}`));
-    });
+    let err_list = validater.validateAdminGet(req.query);
     if (err_list.length > 0) return res.status(400).send({err: err_list});
 
     Admin.find(req.query).select('-__v')
@@ -56,22 +51,8 @@ adminRouter.get('/checkJWTtoken', cors.corsWithOptions, (req, res) => {
   });
 
 adminRouter.post('/signup', cors.corsWithOptions, (req, res, next) => {
-    const schema = Joi.object({
-        email: Joi.string().email({minDomainSegments: 2}).min(5).max(50).required(),
-        password: Joi.string()
-            .pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&^_+\-=])[A-Za-z\d@$!%*#?&^_+\-=]{6,20}$/)
-            .required(),
-        firstName: Joi.string().min(3).max(25).required(),
-        lastName: Joi.string().min(3).max(25).required()
-    })
-    let {error} = schema.validate(req.body, {abortEarly: false});
-    if (error) {
-        let err_list = [];
-        error.details.forEach(element => {
-            err_list.push(element.message);
-        });
-        return res.status(400).send({err: err_list});
-    }
+    let err_list = validater.validateAdminSignUp(req.body);
+    if (err_list.length) return res.status(400).send({err: err_list});
 
     Admin.register(new Admin({email: req.body.email}), req.body.password, (err, user) => {
         if(err) {
@@ -111,12 +92,8 @@ adminRouter.post('/signup', cors.corsWithOptions, (req, res, next) => {
 // });
 
 adminRouter.post('/login', cors.corsWithOptions, (req, res, next) => {
-    const schema = Joi.object({
-        email: Joi.string().min(5).max(50).required(),
-        password: Joi.string().max(50).required()
-    })
-    const {error} = schema.validate(req.body);
-    if (error) return res.status(400).send({err: error.details[0].message});
+    let err_msg = validater.validateAdminLogin(req.body);
+    if (err_msg) return res.status(400).send({err: err_msg});
 
     passport.authenticate('local', (err, user, info) => {
         if (err)
@@ -150,15 +127,8 @@ adminRouter.route('/:adminId/changepassword')
     let result = Joi.objectId().validate(req.params.adminId);
     if (result.error) return res.status(400).send({err: result.error.details[0].message});
 
-    const schema = Joi.object({
-        oldpassword: Joi.string().max(50).required(),
-        newpassword: Joi.string()
-        .pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&^_+\-=])[A-Za-z\d@$!%*#?&^_+\-=]{6,20}$/)
-        .required()
-    })
-
-    let {error} = schema.validate(req.body);
-    if (error) return res.status(400).send({err: error.details[0].message});
+    let err_msg = validater.validateChangePassword(req.body);
+    if (err_msg) return res.status(400).send({err: err_msg});
 
     Admin.findOne({ _id: req.params.adminId },(err, user) => {
         // Check if error connecting
@@ -240,68 +210,71 @@ adminRouter.route('/:userId')
     res.end('POST operation not supported on /users/'+ req.params.userId);
 })
 
-.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
+.put(cors.corsWithOptions, authenticate.verifyAdmin, async (req, res, next) => {
     let result = Joi.objectId().validate(req.params.userId);
     if (result.error) return res.status(400).send({err: `${req.params.userId} is not a valid id.`});
-
-    const schema = Joi.object({
-        email: Joi.string().email({minDomainSegments: 2}).min(5).max(50),        
-        firstName: Joi.string().min(3).max(25),
-        lastName: Joi.string().min(3).max(25),
-        image: Joi.string().min(3)
-    })
-    let {error} = schema.validate(req.body, {abortEarly: false});
-    if (error) {
-        let err_list = [];
-        error.details.forEach(element => {
-            err_list.push(element.message);
-        });
-        return res.status(400).send({err: err_list});
-    }
-    if(req.body.email){
-        Admin.findOne({ email: req.body.email },(err, user) => {
-            if(err){
-                next(err);
-            }
-            if(user){
-                res.statusCode = 400;
-                // next(err);
-                res.setHeader('Content-Type', 'application/json');
-                res.json({err: 'That Email Address already exists.'});
-            }
-            if(!user){
-                Admin.findByIdAndUpdate(req.params.userId, { $set: req.body }, { new: true })
-                .then(user =>{
-                    res.statusCode =200;
-                    res.setHeader('Content-Type', 'application/json');
-                    res.json(user);
-                }, err =>{
-                    next(err);
-                })
-                .catch(err =>{
-                    next(err);
-                });
-            }
-        })
-    }
-    else{
-        Admin.findByIdAndUpdate(req.params.userId,{
-            $set: req.body
-        },
-        {
-            new: true
-        }).then(user =>{
-            res.statusCode =200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(user);
-        }, err =>{
-            next(err);
-        }).catch(err =>{
-            next(err);
-        }); 
-    }
-
+    let err_list = validater.validateAdminPut(req.body);
+    if (err_list.length) return res.status(400).send({err: err_list});
     
+    try {
+        if (req.body.email) {
+            let user = await Admin.findOne({ email: req.body.email });
+            // console.log(user);            
+            if (user && user._id.toHexString() !== req.params.userId) {
+                res.setHeader('Content-Type', 'application/json');
+                return res.status(400).send({err: `Email Address ${req.body.email} already exists.`});
+            }
+        }
+        let new_user = await Admin.findByIdAndUpdate(req.params.userId, { $set: req.body }, { new: true });
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).send(new_user);
+    } 
+    catch (err) {
+        next(err);
+    }
+    
+    // if(req.body.email){
+    //     Admin.findOne({ email: req.body.email },(err, user) => {
+    //         if(err){
+    //             next(err);
+    //         }
+    //         if(user && user._id.toHexString() !== req.params.userId){
+    //             res.statusCode = 400;
+    //             // next(err);
+    //             res.setHeader('Content-Type', 'application/json');
+    //             res.json({err: 'That Email Address already exists.'});
+    //         }
+    //         else{
+    //             Admin.findByIdAndUpdate(req.params.userId, { $set: req.body }, { new: true })
+    //             .then(user =>{
+    //                 res.statusCode =200;
+    //                 res.setHeader('Content-Type', 'application/json');
+    //                 res.json(user);
+    //             }, err =>{
+    //                 next(err);
+    //             })
+    //             .catch(err =>{
+    //                 next(err);
+    //             });
+    //         }
+    //     })
+    // }
+    // else{
+    //     Admin.findByIdAndUpdate(req.params.userId,{
+    //         $set: req.body
+    //     },
+    //     {
+    //         new: true
+    //     }).then(user =>{
+    //         res.statusCode =200;
+    //         res.setHeader('Content-Type', 'application/json');
+    //         res.json(user);
+    //     }, err =>{
+    //         next(err);
+    //     }).catch(err =>{
+    //         next(err);
+    //     }); 
+    // }    
 })
 
 .delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {

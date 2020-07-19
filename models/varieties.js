@@ -8,7 +8,8 @@ var varietySchema = new Schema({
         unique: true
     },
     image: {
-        type: String
+        type: String,
+        default: 'default-variety.png'
     }
 }, {
     timestamps: true

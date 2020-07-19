@@ -18,13 +18,31 @@ const Schema = mongoose.Schema;
 // var varientSchema = new Schema({
 //     price: {
 //         type: Number,
+//         required: true,
+//         // set: v => v.toFixed(2)
+//     },
+//     carotSize: {
+//         type: String,
+//         required: true
+//     },
+//     materialUsed:{
+//         type: String,
 //         required: true
 //     },
 //     availability:{
 //         type: Number,
 //         required: true
 //     },
-//     attributes: [attributeSchema],
+//     color: {
+//         type: String,
+//         enum: ['gold', 'silver'],
+//         required: true
+//     },
+//     size: {
+//         type: String,
+//         default: ''
+//     },
+//     image: String,
 //     sales: {
 //         type: Number, 
 //         default: 0
@@ -33,11 +51,11 @@ const Schema = mongoose.Schema;
 //     timestamps: true
 // });
 
-
 // var productSchema = new Schema({
-//     brand:{
+//     productCode:{
 //         type: String,
-//         required:true
+//         unique: true,
+//         required: true
 //     },
 //     variety:{
 //         type: mongoose.Schema.Types.ObjectId, 
@@ -46,13 +64,10 @@ const Schema = mongoose.Schema;
 //     category:{
 //         type: mongoose.Schema.Types.ObjectId, 
 //         ref: 'Category'
-//     },
-//     name: {
-//         type: String,
-//         required: true
-//     },
+//     },    
 //     image: {
-//         type: String
+//         type: String,
+//         default: 'default-product.jpg'
 //     },
 //     varients: [varientSchema],
 //     sales: {
@@ -66,7 +81,8 @@ const Schema = mongoose.Schema;
 var productSchema = new Schema({
     productCode:{
         type: String,
-        required:true
+        unique: true,
+        required: true
     },
     variety:{
         type: mongoose.Schema.Types.ObjectId, 
@@ -81,19 +97,29 @@ var productSchema = new Schema({
         required: true
     },
     image: {
-        type: String
+        type: String,
+        default: 'default-product.jpg'
     },
     price:{
         type: Number,
         required: true
     },
     availability: {
-        type:Number,
-        required:true
+        type: Number,
+        required: true
     },
     materialUsed:{
         type: String,
         required: true
+    },
+    color: {
+        type: String,
+        enum: ['gold', 'silver'],
+        required: true
+    },
+    size: {
+        type: String,
+        default: ''
     },
     sales: {
         type: Number, 
@@ -102,8 +128,6 @@ var productSchema = new Schema({
 }, {
     timestamps: true
 });
-
-
 
 var Products = mongoose.model('Product', productSchema);
 

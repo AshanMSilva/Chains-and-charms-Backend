@@ -32,7 +32,7 @@ const feedbacks = require('./models/feedbacks');
 
 // const url = 'mongodb://localhost:27017/conFusion';
 const url = config.mongoUrl;
-mongoose.connect(url, {'useNewUrlParser': true, 'useCreateIndex': true, 'useUnifiedTopology': true})
+mongoose.connect(url, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true, useFindAndModify: false})
     .then(() => console.log(`Connected to DB ${url}`))  
     .catch(err => {
         console.log(`Couldn't connect to DB ${url}`);
@@ -83,7 +83,7 @@ app.use(function(err, req, res, next) {
     res.locals.error = req.app.get('env') === 'development' ? err : {};
 
     // render the error page
-    res.status = (err.status || 500);
+    res.statusCode = (err.status || 500);
     res.json({err: err.message});
 });
 

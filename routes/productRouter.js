@@ -1,11 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const Joi = require('@hapi/joi');
+Joi.objectId = require('joi-objectid')(Joi);
 const cors = require('./cors');
 
 const Products = require('../models/products');
 var authenticate = require('../authenticate');
-
+const validater = require('../validation/productValidation');
 
 const productRouter = express.Router();
 
@@ -15,8 +17,8 @@ productRouter.route('/')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 .get(cors.cors, (req,res,next) => {
     Products.find(req.query)
-    .populate('category')
-    .populate('variety')
+    .populate('category', 'name')
+    .populate('variety', 'name')
     .then(products =>{
         res.statusCode =200;
         res.setHeader('Content-Type', 'application/json');
@@ -25,20 +27,51 @@ productRouter.route('/')
         next(err);
     }).catch(err =>{
         next(err);
-    }); 
-
+    });
 })
-.post(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
-    Products.create(req.body).then(product =>{
-        console.log('Product created', product);
-        res.statusCode =200;
+.post(cors.corsWithOptions, authenticate.verifyAdmin, async (req, res, next) => {
+    // req.body contains the product and its 1st varient
+    // {productCode: 'EB2086', variety: (an objectId),
+    // category: (an objectId), carotSize: '108Kt', materialUsed: 'mat X',
+    // image: (some String) --optional, price: 1549.99, availability: 50, 
+    // color: gold (or silver), size: '7.5mm' --optional}
+
+    let err_list = validater.validateProductPost(req.body);
+    if (err_list.length) return res.status(400).send({err: err_list});
+
+    try {
+        let {productCode, variety, category} = req.body;
+
+        let ref_errors = await validater.validateCategory_Variety(category, variety);
+        if(ref_errors.length) return res.status(404).send({err: ref_errors});
+
+        // let varient = {
+        //     price: req.body.price, availability: req.body.availability, color: req.body.color,
+        //     carotSize: req.body.carotSize, materialUsed: req.body.materialUsed
+        // };
+        // if(req.body.image) product.image = req.body.image;
+        // if(req.body.size) varient.size = req.body.size;
+        // let product = {productCode, variety, category}
+        // product.varients = [varient];
+
+        let result = await Products.create(req.body);
+        console.log('Product created', result);
         res.setHeader('Content-Type', 'application/json');
-        res.json(product);
-    }, err =>{
+        res.status(200).send(result);
+        // Products.create(product).then(result =>{
+        //     console.log('Product created', result);
+        //     res.statusCode =200;
+        //     res.setHeader('Content-Type', 'application/json');
+        //     res.json(result);
+        // }, err =>{
+        //     next(err);
+        // }).catch(err =>{
+        //     next(err);
+        // }); 
+    } 
+    catch (err) {
         next(err);
-    }).catch(err =>{
-        next(err);
-    }); 
+    }    
 })
 .put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     res.statusCode = 403;
@@ -78,16 +111,25 @@ productRouter.route('/:productId')
     res.end('POST operation not supported on /products/'+ req.params.productId);
 })
 
-.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
-    Products.findByIdAndUpdate(req.params.productId,{
-        $set: req.body
-    },
-    {
-        new: true
-    }).then(product =>{
-        res.statusCode =200;
+.put(cors.corsWithOptions, authenticate.verifyAdmin, async (req, res, next) => {
+    // req.body contains fields of the product schema
+    let {error} = Joi.objectId().validate(req.params.productId);
+    if (error) return res.status(400).send({err: `${req.params.productId} is not a valid id.`});
+    
+    let err_list = validater.validateProductPut(req.body);
+    if (err_list.length) return res.status(400).send({err: err_list});
+
+    let ref_errors = await validater.validateCategory_Variety(req.body.category, req.body.variety);
+    if(ref_errors.length) return res.status(404).send({err: ref_errors});
+
+    Products.findByIdAndUpdate(req.params.productId, { $set: req.body }, { new: true })
+    .then(product =>{
+        if(!product) {
+            res.setHeader('Content-Type', 'application/json');
+            return res.status(404).send({err: `A product does not exist by the id ${req.params.productId}.`});
+        }
         res.setHeader('Content-Type', 'application/json');
-        res.json(product);
+        res.status(200).json(product);
     }, err =>{
         next(err);
     }).catch(err =>{
@@ -105,78 +147,103 @@ productRouter.route('/:productId')
     }).catch(err =>{
         next(err);
     });
-    });
+});
+/*
+productRouter.route('/:productId/varients')
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+.get(cors.cors, (req,res,next) => {
+    Products.findById(req.params.productId)
+    .then((product) => {
+        if (product != null) {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(product.varients);
+        }
+        else {
+            err = new Error('Product ' + req.params.productId + ' not found');
+            err.status = 404;
+            return next(err);
+        }
+    }, (err) => next(err))
+    .catch((err) => next(err));
+})
+.post(cors.corsWithOptions, authenticate.verifyAdmin, async (req, res, next) => {
+    // req.body contains fields of the varient schema
+    // price, availability, materialUsed, carotSize, color, size, image (image, size is optional, others are required)
+    let {error} = Joi.objectId().validate(req.params.productId);
+    if (error) return res.status(400).send({err: `${req.params.productId} is not a valid id.`});
+    let err_list = validater.validateVarientPost(req.body);
+    if (err_list.length) return res.status(400).send({err: err_list});
 
-// productRouter.route('/:productId/varients')
-// .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-// .get(cors.cors, (req,res,next) => {
-//     Products.findById(req.params.productId)
-//     .then((product) => {
-//         if (product != null) {
-//             res.statusCode = 200;
-//             res.setHeader('Content-Type', 'application/json');
-//             res.json(product.varients);
-//         }
-//         else {
-//             err = new Error('Product ' + req.params.productId + ' not found');
-//             err.status = 404;
-//             return next(err);
-//         }
-//     }, (err) => next(err))
-//     .catch((err) => next(err));
-// })
-// .post(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
-//     Products.findById(req.params.productId)
-//     .then((product) => {
-//         if (product != null) {
-//             // req.body.author = req.user._id;
-//             product.varients.push(req.body);
-//             product.save()
-//             .then((product) => {
-//                 Products.findById(product._id).then(product =>{
-//                     res.statusCode = 200;
-//                     res.setHeader('Content-Type', 'application/json');
-//                     res.json(product); 
-//                 })
-                               
-//             }, (err) => next(err));
-//         }
-//         else {
-//             err = new Error('Product ' + req.params.productId + ' not found');
-//             err.status = 404;
-//             return next(err);
-//         }
-//     }, (err) => next(err))
-//     .catch((err) => next(err));
-// })
-// .put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
-//     res.statusCode = 403;
-//     res.end('PUT operation not supported on /products/'
-//         + req.params.productId + '/varients');
-// })
-// .delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
-//     Products.findById(req.params.productId)
-//     .then((product) => {
-//         if (product != null) {
-//             for (var i = (product.varients.length -1); i >= 0; i--) {
-//                 product.varients.id(product.varients[i]._id).remove();
-//             }
-//             product.save()
-//             .then((product) => {
-//                 res.statusCode = 200;
-//                 res.setHeader('Content-Type', 'application/json');
-//                 res.json(product);                
-//             }, (err) => next(err));
-//         }
-//         else {
-//             err = new Error('Product ' + req.params.productId + ' not found');
-//             err.status = 404;
-//             return next(err);
-//         }
-//     }, (err) => next(err))
-//     .catch((err) => next(err));    
-// });
+    try{
+        let product = await Products.findById(req.params.productId);        
+        if (product != null) {
+            let err_msg = null;
+            for (const varient of product.varients) {
+                let equality_check = true;
+                
+                if (req.body.hasOwnProperty('size')) {
+                    equality_check = (varient.size === req.body.size);
+                }
+                if (equality_check && (varient.color === req.body.color)){
+                    err_msg = `A varient exists with the same attributes.`;
+                    break;
+                }
+            }
+            if (err_msg) return res.status(400).send({err: err_msg});
 
+            product.varients.push(req.body);
+            let result = await product.save();
+            res.setHeader('Content-Type', 'application/json');
+            res.status(200).send(result);
+                // .then((product) => {
+                //     Products.findById(product._id).then(product =>{
+                //         res.statusCode = 200;
+                //         res.setHeader('Content-Type', 'application/json');
+                //         res.json(product); 
+                //     })
+                                
+                // })
+                // .catch( err => next(err) );
+        }
+        else {
+            err = new Error('Product ' + req.params.productId + ' not found');
+            err.status = 404;
+            return next(err);
+        }        
+    }
+    catch(err){
+        next(err)
+    }
+})
+.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
+    res.statusCode = 403;
+    res.end('PUT operation not supported on /products/'
+        + req.params.productId + '/varients');
+})
+.delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
+    Products.findById(req.params.productId)
+    .then((product) => {
+        if (product != null) {
+            for (var i = (product.varients.length -1); i >= 0; i--) {
+                product.varients.id(product.varients[i]._id).remove();
+            }
+            product.save()
+            .then((product) => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(product);                
+            }, (err) => next(err));
+        }
+        else {
+            err = new Error('Product ' + req.params.productId + ' not found');
+            err.status = 404;
+            return next(err);
+        }
+    }, (err) => next(err))
+    .catch((err) => next(err));    
+});
+*/
 // productRouter.route('/:productId/varients/:varientId')
 // .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 // .get(cors.cors, (req,res,next) => {
