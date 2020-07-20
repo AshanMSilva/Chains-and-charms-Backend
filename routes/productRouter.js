@@ -27,7 +27,7 @@ productRouter.route('/')
     }); 
 
 })
-.post(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
+.post(cors.corsWithOptions,authenticate.verifyAdmin, (req, res, next) => {
     Products.create(req.body).then(product =>{
         console.log('Product created', product);
         res.statusCode =200;
@@ -460,6 +460,105 @@ productRouter.route('/:productId/varients/:varientId/attributes/:attributeId')
     .catch((err) => next(err));
 });
 
+
+productRouter.route('/categories/varients/:varientId/attributes/:attributeId')
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+.get(cors.cors, (req,res,next) => {
+    Products.findById(req.params.productId)
+    .then((product) => {
+        if (product != null && product.varients.id(req.params.varientId) != null && product.varients.id(req.params.varientId).attributes.id(req.params.attributeId) != null) {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(product.varients.id(req.params.varientId).attributes.id(req.params.attributeId));
+        }
+        else if (product == null) {
+            err = new Error('Product' + req.params.productId + ' not found');
+            err.status = 404;
+            return next(err);
+        }
+        else if(product.varients.id(req.params.varientId) == null){
+            err = new Error('Varients ' + req.params.varientId + ' not found');
+            err.status = 404;
+            return next(err);            
+        }
+        else{
+            err = new Error('Attributes ' + req.params.attributeId + ' not found');
+            err.status = 404;
+            return next(err); 
+        }
+    }, (err) => next(err))
+    .catch((err) => next(err));
+})
+.post(cors.corsWithOptions, (req, res, next) => {
+    res.statusCode = 403;
+    res.end('POST operation not supported on /varients/'+ req.params.varientId
+        + '/attributes/' + req.params.attributeId);
+})
+.put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
+    Products.findById(req.params.productId)
+    .then((product) => {
+        if (product != null && product.varients.id(req.params.varientId) != null && product.varients.id(req.params.varientId).attributes.id(req.params.attributeId) != null) {
+            if (req.body.name) {
+                product.varients.id(req.params.varientId).attributes.id(req.params.attributeId).name = req.body.name;
+            }
+            if (req.body.value) {
+                product.varients.id(req.params.varientId).attributes.id(req.params.attributeId).value = req.body.value;                
+            }
+            product.save()
+            .then((product) => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(product.varients.id(req.params.varientId));                
+            }, (err) => next(err));
+        }
+        else if (product == null) {
+            err = new Error('Product' + req.params.productId + ' not found');
+            err.status = 404;
+            return next(err);
+        }
+        else if(product.varients.id(req.params.varientId) == null){
+            err = new Error('Varients ' + req.params.varientId + ' not found');
+            err.status = 404;
+            return next(err);            
+        }
+        else{
+            err = new Error('Attributes ' + req.params.attributeId + ' not found');
+            err.status = 404;
+            return next(err); 
+        }
+    }, (err) => next(err))
+    .catch((err) => next(err));
+})
+.delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
+    Products.findById(req.params.productId)
+    .then((product) => {
+        if (product != null && product.varients.id(req.params.varientId) != null && product.varients.id(req.params.varientId).attributes.id(req.params.attributeId) != null) {
+            product.varients.id(req.params.varientId).attributes.id(req.params.attributeId).remove();
+            product.save()
+            .then((product) => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(product.varients.id(req.params.varientId));                
+            }, (err) => next(err));
+        }
+        else if (product == null) {
+            err = new Error('Product' + req.params.productId + ' not found');
+            err.status = 404;
+            return next(err);
+        }
+        else if(product.varients.id(req.params.varientId) == null){
+            err = new Error('Varients ' + req.params.varientId + ' not found');
+            err.status = 404;
+            return next(err);            
+        }
+        else{
+            err = new Error('Attributes ' + req.params.attributeId + ' not found');
+            err.status = 404;
+            return next(err); 
+        }
+    }, (err) => next(err))
+    .catch((err) => next(err));
+});
 
 
 module.exports = productRouter;

@@ -10,7 +10,6 @@ var authenticate = require('./authenticate');
 var config = require('./config');
 
 
-
 // var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/adminRouter');
 var categoryRouter = require('./routes/categoryRouter');
@@ -20,6 +19,7 @@ var orderRouter = require('./routes/orderRouter');
 var uploadRouter = require('./routes/uploadRouter');
 var mailRouter = require('./routes/mailRouter');
 var dealerRouter = require('./routes/dealerRouter');
+var searchRouter = require('./routes/searchRouter');
 
 const mongoose = require('mongoose');
 const categories = require('./models/categories');
@@ -72,6 +72,7 @@ app.use('/products', productRouter);
 app.use('/imageUpload',uploadRouter);
 app.use('/mail', mailRouter);
 app.use('/dealers', dealerRouter);
+app.use('/search', searchRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
