@@ -109,6 +109,7 @@ categoryRouter.route('/:categoryId')
 })
 
 .put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
+    console.log('/:categoryId PUT/ request body', req.body);
     let result = Joi.objectId().validate(req.params.categoryId);
     if (result.error) return res.status(400).send({err: `${req.params.categoryId} is not a valid id.`});
 

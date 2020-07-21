@@ -211,6 +211,8 @@ adminRouter.route('/:userId')
 })
 
 .put(cors.corsWithOptions, authenticate.verifyAdmin, async (req, res, next) => {
+    console.log('admin/:userId PUT/ req.body');
+    console.log(req.body);
     let result = Joi.objectId().validate(req.params.userId);
     if (result.error) return res.status(400).send({err: `${req.params.userId} is not a valid id.`});
     let err_list = validater.validateAdminPut(req.body);
