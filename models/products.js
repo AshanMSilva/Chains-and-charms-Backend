@@ -2,59 +2,125 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 // require('mongoose-currency').loadType(mongoose);
 
-var attributeSchema = new Schema({
-    name:{
-        type: String,
-        required: true
-    },
-    value:{
-        type: String
+// var attributeSchema = new Schema({
+//     name:{
+//         type: String,
+//         required: true
+//     },
+//     value:{
+//         type: String
        
-    }
-},{
-    timestamps: true
-});
+//     }
+// },{
+//     timestamps: true
+// });
 
-var varientSchema = new Schema({
-    price: {
-        type: Number,
-        required: true
-    },
-    availability:{
-        type: Number,
-        required: true
-    },
-    attributes: [attributeSchema],
-    sales: {
-        type: Number, 
-        default: 0
-    }
-}, {
-    timestamps: true
-});
+// var varientSchema = new Schema({
+//     price: {
+//         type: Number,
+//         required: true,
+//         // set: v => v.toFixed(2)
+//     },
+//     carotSize: {
+//         type: String,
+//         required: true
+//     },
+//     materialUsed:{
+//         type: String,
+//         required: true
+//     },
+//     availability:{
+//         type: Number,
+//         required: true
+//     },
+//     color: {
+//         type: String,
+//         enum: ['gold', 'silver'],
+//         required: true
+//     },
+//     size: {
+//         type: String,
+//         default: ''
+//     },
+//     image: String,
+//     sales: {
+//         type: Number, 
+//         default: 0
+//     }
+// }, {
+//     timestamps: true
+// });
 
+// var productSchema = new Schema({
+//     productCode:{
+//         type: String,
+//         unique: true,
+//         required: true
+//     },
+//     variety:{
+//         type: mongoose.Schema.Types.ObjectId, 
+//         ref: 'Variety'
+//     },
+//     category:{
+//         type: mongoose.Schema.Types.ObjectId, 
+//         ref: 'Category'
+//     },    
+//     image: {
+//         type: String,
+//         default: 'default-product.jpg'
+//     },
+//     varients: [varientSchema],
+//     sales: {
+//         type: Number, 
+//         default: 0
+//     }
+// }, {
+//     timestamps: true
+// });
 
 var productSchema = new Schema({
-    brand:{
+    productCode:{
         type: String,
-        required:true
+        unique: true,
+        required: true
     },
-    dealer:{
+    variety:{
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Dealer'
+        ref: 'Variety'
     },
     category:{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Category'
     },
-    name: {
+    carotSize: {
         type: String,
         required: true
     },
     image: {
-        type: String       
+        type: String,
+        default: 'default-product.jpg'
     },
-    varients: [varientSchema],
+    price:{
+        type: Number,
+        required: true
+    },
+    availability: {
+        type: Number,
+        required: true
+    },
+    materialUsed:{
+        type: String,
+        required: true
+    },
+    color: {
+        type: String,
+        enum: ['gold', 'silver'],
+        required: true
+    },
+    size: {
+        type: String,
+        default: ''
+    },
     sales: {
         type: Number, 
         default: 0
@@ -62,7 +128,6 @@ var productSchema = new Schema({
 }, {
     timestamps: true
 });
-
 
 var Products = mongoose.model('Product', productSchema);
 

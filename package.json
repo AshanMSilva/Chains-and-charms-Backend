@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
     "browser-sync": "^2.26.7",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -15,6 +16,7 @@
     "express-session": "^1.17.0",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
+    "joi-objectid": "^3.0.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.4",
     "mongoose-currency": "^0.2.0",

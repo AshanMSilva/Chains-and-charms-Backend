@@ -20,23 +20,25 @@ var uploadRouter = require('./routes/uploadRouter');
 var mailRouter = require('./routes/mailRouter');
 var dealerRouter = require('./routes/dealerRouter');
 var searchRouter = require('./routes/searchRouter');
+var varietyRouter = require('./routes/varietyRouter');
+var contactRouter = require('./routes/contactRouter');
 
 const mongoose = require('mongoose');
 const categories = require('./models/categories');
 const products = require('./models/products');
 const orders = require('./models/orders');
-const dealers = require('./models/dealers');
+const varieties = require('./models/varieties');
+const feedbacks = require('./models/feedbacks');
 
 
 // const url = 'mongodb://localhost:27017/conFusion';
 const url = config.mongoUrl;
-const connect = mongoose.connect(url);
-
-connect.then((db)=>{
-  console.log('Connected correctly to server');
-}, (err)=>{
-  console.log(err);
-});
+mongoose.connect(url, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true, useFindAndModify: false})
+    .then(() => console.log(`Connected to DB ${url}`))  
+    .catch(err => {
+        console.log(`Couldn't connect to DB ${url}`);
+        console.log(err);
+    })
 
 var app = express();
 
@@ -62,10 +64,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use('/users', usersRouter);
 app.use('/admin', adminRouter);
-
-
-
-
 app.use('/categories', categoryRouter);
 app.use('/orders', orderRouter);
 app.use('/products', productRouter);
@@ -73,21 +71,23 @@ app.use('/imageUpload',uploadRouter);
 app.use('/mail', mailRouter);
 app.use('/dealers', dealerRouter);
 app.use('/search', searchRouter);
+app.use('/varieties', varietyRouter);
+app.use('/contact', contactRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+    next(createError(404));
 });
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.json(err.message);
+    // render the error page
+    res.statusCode = (err.status || 500);
+    res.json({err: err.message});
 });
 
 module.exports = app;
