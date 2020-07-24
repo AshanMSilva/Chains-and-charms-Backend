@@ -33,7 +33,7 @@ productRouter.route('/')
     // req.body contains the product and its 1st varient
     // {productCode: 'EB2086', variety: (an objectId),
     // category: (an objectId), carotSize: '108Kt', materialUsed: 'mat X',
-    // image: (some String) --optional, price: 1549.99, availability: 50, 
+    // image: (some String) --optional, price: 1549.99, availability: 50,
     // color: gold (or silver), size: '7.5mm' --optional}
 
     let err_list = validater.validateProductPost(req.body);
@@ -67,11 +67,11 @@ productRouter.route('/')
         //     next(err);
         // }).catch(err =>{
         //     next(err);
-        // }); 
-    } 
+        // });
+    }
     catch (err) {
         next(err);
-    }    
+    }
 })
 .put(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     res.statusCode = 403;
@@ -81,7 +81,7 @@ productRouter.route('/')
     Products.remove({}).then(response =>{
         res.statusCode =200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(response); 
+        res.json(response);
     }, err =>{
         next(err);
     }).catch(err =>{
@@ -103,7 +103,7 @@ productRouter.route('/:productId')
         next(err);
     }).catch(err =>{
         next(err);
-    }); 
+    });
 })
 
 .post(cors.corsWithOptions, (req, res, next) => {
@@ -115,7 +115,7 @@ productRouter.route('/:productId')
     // req.body contains fields of the product schema
     let {error} = Joi.objectId().validate(req.params.productId);
     if (error) return res.status(400).send({err: `${req.params.productId} is not a valid id.`});
-    
+
     let err_list = validater.validateProductPut(req.body);
     if (err_list.length) return res.status(400).send({err: err_list});
 
@@ -134,14 +134,14 @@ productRouter.route('/:productId')
         next(err);
     }).catch(err =>{
         next(err);
-    }); 
+    });
 })
 
 .delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     Products.findByIdAndRemove(req.params.productId).then(response =>{
         res.statusCode =200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(response); 
+        res.json(response);
     }, err =>{
         next(err);
     }).catch(err =>{
@@ -176,12 +176,12 @@ productRouter.route('/:productId/varients')
     if (err_list.length) return res.status(400).send({err: err_list});
 
     try{
-        let product = await Products.findById(req.params.productId);        
+        let product = await Products.findById(req.params.productId);
         if (product != null) {
             let err_msg = null;
             for (const varient of product.varients) {
                 let equality_check = true;
-                
+
                 if (req.body.hasOwnProperty('size')) {
                     equality_check = (varient.size === req.body.size);
                 }
@@ -200,9 +200,9 @@ productRouter.route('/:productId/varients')
                 //     Products.findById(product._id).then(product =>{
                 //         res.statusCode = 200;
                 //         res.setHeader('Content-Type', 'application/json');
-                //         res.json(product); 
+                //         res.json(product);
                 //     })
-                                
+
                 // })
                 // .catch( err => next(err) );
         }
@@ -210,7 +210,7 @@ productRouter.route('/:productId/varients')
             err = new Error('Product ' + req.params.productId + ' not found');
             err.status = 404;
             return next(err);
-        }        
+        }
     }
     catch(err){
         next(err)
@@ -232,7 +232,7 @@ productRouter.route('/:productId/varients')
             .then((product) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json(product);                
+                res.json(product);
             }, (err) => next(err));
         }
         else {
@@ -241,7 +241,7 @@ productRouter.route('/:productId/varients')
             return next(err);
         }
     }, (err) => next(err))
-    .catch((err) => next(err));    
+    .catch((err) => next(err));
 });
 */
 // productRouter.route('/:productId/varients/:varientId')
@@ -263,7 +263,7 @@ productRouter.route('/:productId/varients')
 //         else {
 //             err = new Error('Varients ' + req.params.varientId + ' not found');
 //             err.status = 404;
-//             return next(err);            
+//             return next(err);
 //         }
 //     }, (err) => next(err))
 //     .catch((err) => next(err));
@@ -302,11 +302,11 @@ productRouter.route('/:productId/varients')
 //         else {
 //             err = new Error('Varients ' + req.params.varientId + ' not found');
 //             err.status = 404;
-//             return next(err);            
+//             return next(err);
 //         }
 //     }, (err) => next(err))
 //     .catch((err) => next(err));
-    
+
 // })
 // .delete(cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
 //     Products.findById(req.params.productId)
@@ -321,7 +321,7 @@ productRouter.route('/:productId/varients')
 //                         res.setHeader('Content-Type', 'application/json');
 //                         res.json(product);
 //                     })
-                                    
+
 //                 }, (err) => next(err));
 //             // }
 //             // else{
@@ -329,7 +329,7 @@ productRouter.route('/:productId/varients')
 //             //     err.status = 403;
 //             //     return next(err);
 //             // }
-            
+
 //         }
 //         else if (product == null) {
 //             err = new Error('Product ' + req.params.productId + ' not found');
@@ -339,7 +339,7 @@ productRouter.route('/:productId/varients')
 //         else {
 //             err = new Error('Varients ' + req.params.varientId + ' not found');
 //             err.status = 404;
-//             return next(err);            
+//             return next(err);
 //         }
 //     }, (err) => next(err))
 //     .catch((err) => next(err));
@@ -363,7 +363,7 @@ productRouter.route('/:productId/varients')
 //         else {
 //             err = new Error('Varients ' + req.params.varientId + ' not found');
 //             err.status = 404;
-//             return next(err);            
+//             return next(err);
 //         }
 //     }, (err) => next(err))
 //     .catch((err) => next(err));
@@ -379,7 +379,7 @@ productRouter.route('/:productId/varients')
 //                         product =>{
 //                             res.statusCode = 200;
 //                             res.setHeader('Content-Type', 'application/json');
-//                             res.json(product.varients.id(req.params.varientId)); 
+//                             res.json(product.varients.id(req.params.varientId));
 //                         }
 //                     )
 //                 },(err) => next(err)
@@ -393,7 +393,7 @@ productRouter.route('/:productId/varients')
 //         else {
 //             err = new Error('Varients ' + req.params.varientId + ' not found');
 //             err.status = 404;
-//             return next(err);            
+//             return next(err);
 //         }
 //     }, (err) => next(err))
 //     .catch((err) => next(err));
@@ -414,7 +414,7 @@ productRouter.route('/:productId/varients')
 //             .then((product) => {
 //                 res.statusCode = 200;
 //                 res.setHeader('Content-Type', 'application/json');
-//                 res.json(product.varients.id(req.params.varientId));                
+//                 res.json(product.varients.id(req.params.varientId));
 //             }, (err) => next(err));
 //         }
 //         else if (product == null) {
@@ -425,7 +425,7 @@ productRouter.route('/:productId/varients')
 //         else {
 //             err = new Error('Varients ' + req.params.varientId + ' not found');
 //             err.status = 404;
-//             return next(err);            
+//             return next(err);
 //         }
 //     }, (err) => next(err))
 //     .catch((err) => next(err));
@@ -449,12 +449,12 @@ productRouter.route('/:productId/varients')
 //         else if(product.varients.id(req.params.varientId) == null){
 //             err = new Error('Varients ' + req.params.varientId + ' not found');
 //             err.status = 404;
-//             return next(err);            
+//             return next(err);
 //         }
 //         else{
 //             err = new Error('Attributes ' + req.params.attributeId + ' not found');
 //             err.status = 404;
-//             return next(err); 
+//             return next(err);
 //         }
 //     }, (err) => next(err))
 //     .catch((err) => next(err));
@@ -472,13 +472,13 @@ productRouter.route('/:productId/varients')
 //                 product.varients.id(req.params.varientId).attributes.id(req.params.attributeId).name = req.body.name;
 //             }
 //             if (req.body.value) {
-//                 product.varients.id(req.params.varientId).attributes.id(req.params.attributeId).value = req.body.value;                
+//                 product.varients.id(req.params.varientId).attributes.id(req.params.attributeId).value = req.body.value;
 //             }
 //             product.save()
 //             .then((product) => {
 //                 res.statusCode = 200;
 //                 res.setHeader('Content-Type', 'application/json');
-//                 res.json(product.varients.id(req.params.varientId));                
+//                 res.json(product.varients.id(req.params.varientId));
 //             }, (err) => next(err));
 //         }
 //         else if (product == null) {
@@ -489,12 +489,12 @@ productRouter.route('/:productId/varients')
 //         else if(product.varients.id(req.params.varientId) == null){
 //             err = new Error('Varients ' + req.params.varientId + ' not found');
 //             err.status = 404;
-//             return next(err);            
+//             return next(err);
 //         }
 //         else{
 //             err = new Error('Attributes ' + req.params.attributeId + ' not found');
 //             err.status = 404;
-//             return next(err); 
+//             return next(err);
 //         }
 //     }, (err) => next(err))
 //     .catch((err) => next(err));
@@ -508,7 +508,7 @@ productRouter.route('/:productId/varients')
 //             .then((product) => {
 //                 res.statusCode = 200;
 //                 res.setHeader('Content-Type', 'application/json');
-//                 res.json(product.varients.id(req.params.varientId));                
+//                 res.json(product.varients.id(req.params.varientId));
 //             }, (err) => next(err));
 //         }
 //         else if (product == null) {
@@ -519,12 +519,12 @@ productRouter.route('/:productId/varients')
 //         else if(product.varients.id(req.params.varientId) == null){
 //             err = new Error('Varients ' + req.params.varientId + ' not found');
 //             err.status = 404;
-//             return next(err);            
+//             return next(err);
 //         }
 //         else{
 //             err = new Error('Attributes ' + req.params.attributeId + ' not found');
 //             err.status = 404;
-//             return next(err); 
+//             return next(err);
 //         }
 //     }, (err) => next(err))
 //     .catch((err) => next(err));
@@ -549,12 +549,12 @@ productRouter.route('/categories/varients/:varientId/attributes/:attributeId')
         else if(product.varients.id(req.params.varientId) == null){
             err = new Error('Varients ' + req.params.varientId + ' not found');
             err.status = 404;
-            return next(err);            
+            return next(err);
         }
         else{
             err = new Error('Attributes ' + req.params.attributeId + ' not found');
             err.status = 404;
-            return next(err); 
+            return next(err);
         }
     }, (err) => next(err))
     .catch((err) => next(err));
@@ -572,13 +572,13 @@ productRouter.route('/categories/varients/:varientId/attributes/:attributeId')
                 product.varients.id(req.params.varientId).attributes.id(req.params.attributeId).name = req.body.name;
             }
             if (req.body.value) {
-                product.varients.id(req.params.varientId).attributes.id(req.params.attributeId).value = req.body.value;                
+                product.varients.id(req.params.varientId).attributes.id(req.params.attributeId).value = req.body.value;
             }
             product.save()
             .then((product) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json(product.varients.id(req.params.varientId));                
+                res.json(product.varients.id(req.params.varientId));
             }, (err) => next(err));
         }
         else if (product == null) {
@@ -589,12 +589,12 @@ productRouter.route('/categories/varients/:varientId/attributes/:attributeId')
         else if(product.varients.id(req.params.varientId) == null){
             err = new Error('Varients ' + req.params.varientId + ' not found');
             err.status = 404;
-            return next(err);            
+            return next(err);
         }
         else{
             err = new Error('Attributes ' + req.params.attributeId + ' not found');
             err.status = 404;
-            return next(err); 
+            return next(err);
         }
     }, (err) => next(err))
     .catch((err) => next(err));
@@ -608,7 +608,7 @@ productRouter.route('/categories/varients/:varientId/attributes/:attributeId')
             .then((product) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json(product.varients.id(req.params.varientId));                
+                res.json(product.varients.id(req.params.varientId));
             }, (err) => next(err));
         }
         else if (product == null) {
@@ -619,16 +619,51 @@ productRouter.route('/categories/varients/:varientId/attributes/:attributeId')
         else if(product.varients.id(req.params.varientId) == null){
             err = new Error('Varients ' + req.params.varientId + ' not found');
             err.status = 404;
-            return next(err);            
+            return next(err);
         }
         else{
             err = new Error('Attributes ' + req.params.attributeId + ' not found');
             err.status = 404;
-            return next(err); 
+            return next(err);
         }
     }, (err) => next(err))
     .catch((err) => next(err));
 });
 
+
+productRouter.route('/:productId/review')
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+.post(cors.cors, (req,res,next) => {
+
+    let err_list = validater.validateReviewPost(req.body);
+    if (err_list.length) return res.status(400).send({err: err_list});
+
+    Products.findById(req.params.productId)
+    .then((product) => {
+      var reviewsList = product.reviews;
+      //console.log(reviewsList);
+      var ratingSum = (product.totalRating)*(reviewsList.length);
+      var newRating = (ratingSum + req.body.rating)/(reviewsList.length+1);
+      //console.log(newRating);
+      reviewsList.push(req.body);
+      Products.findByIdAndUpdate(req.params.productId, { reviews:reviewsList,totalRating:newRating}, { new: true })
+      .then(product =>{
+        if(!product) {
+            res.setHeader('Content-Type', 'application/json');
+            return res.status(404).send({err: `A product does not exist by the id ${req.params.productId}.`});
+        }
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).json(product);
+      }, err =>{
+        next(err);
+    }).catch(err =>{
+        next(err);
+    });
+}, err =>{
+        next(err);
+    }).catch(err =>{
+        next(err);
+    });
+});
 
 module.exports = productRouter;
