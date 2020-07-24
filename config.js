@@ -1,7 +1,14 @@
+const config = require('config');
+
+if (!config.get('secretKey')) {
+    throw new Error('FATAL ERROR !!! : jwt Secret Key is not defined.');
+    // process.exit(1);
+}
+
 module.exports = {
-    'secretKey': '12345-67890-09876-54321',
+    'secretKey': config.get('secretKey'),
     // 'mongoUrl' : 'mongodb+srv://e_com_user:User123@chainsandcharms.hrmyt.mongodb.net/Chains-and-charms-Server?retryWrites=true&w=majority',
-    'mongoUrl' : 'mongodb://localhost:27017/Chains-and-charms-Server',
+    'mongoUrl' : config.get('mongoUrl'),
     'businessEmail':'smanalysis.uom@gmail.com',
     'businessPassword': '123@Ashan@123'
     // 'facebook': {
