@@ -6,11 +6,16 @@ if (!config.get('secretKey')) {
 }
 
 module.exports = {
-    'secretKey': config.get('secretKey'),
+    // 'secretKey': config.get('secretKey'),
     // 'mongoUrl' : 'mongodb+srv://e_com_user:User123@chainsandcharms.hrmyt.mongodb.net/Chains-and-charms-Server?retryWrites=true&w=majority',
-    'mongoUrl' : config.get('mongoUrl'),
-    'businessEmail': config.get('businessEmail'),
-    'businessPassword': config.get('businessPassword')
+    // 'mongoUrl' : config.get('mongoUrl'),
+    // 'businessEmail': config.get('businessEmail'),
+    // 'businessPassword': config.get('businessPassword'),
+    'secretKey': process.env.secretKey,
+    'mongoUrl': process.env.mongoUrl,
+    'businessEmail': process.env.businessEmail,
+    'businessPassword': process.env.businessPassword
+
     // 'businessEmail':'smanalysis.uom@gmail.com',
     // 'businessPassword': '123@Ashan@123'
     // 'facebook': {
