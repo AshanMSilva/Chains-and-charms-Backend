@@ -38,7 +38,8 @@ function validateProductPut(body) {
         price: Joi.number().positive(),
         availability: Joi.number().integer().min(0),
         color: Joi.string().valid('gold', 'silver'),
-        size: Joi.string().max(25)
+        size: Joi.string().max(25),
+        totalRating: Joi.number().positive()
     })
     let {error} = schema.validate(body, {abortEarly: false});
     return get_err_list(error);
@@ -70,10 +71,32 @@ function validateVarientPost(body) {
     let {error} = schema.validate(body, {abortEarly: false});
     return get_err_list(error);
 }
+function validateReviewPost(body) {
+    const schema = Joi.object({
+        name: Joi.string().min(3).max(30).required(),
+        email: Joi.string().max(50).required(),
+        message: Joi.string().min(3).required(),
+        rating: Joi.number().positive().required(),
+        
+    })
+    let {error} = schema.validate(body, {abortEarly: false});
+    return get_err_list(error);
+}
+
+function validateUpdateTotalRating(body) {
+    const schema = Joi.object({
+        totalRating: Joi.number().positive().required(),
+        
+    })
+    let {error} = schema.validate(body, {abortEarly: false});
+    return get_err_list(error);
+}
 
 module.exports = {
     validateProductPost,
     validateProductPut,
     validateCategory_Variety,
-    validateVarientPost
+    validateVarientPost,
+    validateReviewPost,
+    validateUpdateTotalRating
 }

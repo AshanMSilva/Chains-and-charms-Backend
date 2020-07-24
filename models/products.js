@@ -78,6 +78,27 @@ const Schema = mongoose.Schema;
 //     timestamps: true
 // });
 
+var reviewSchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    message: {
+        type: String,
+        required: true
+    },
+    rating: {
+        type: Number,
+        required: true
+    }
+}, {
+    timestamps:true
+});
+
 var productSchema = new Schema({
     productCode:{
         type: String,
@@ -124,7 +145,12 @@ var productSchema = new Schema({
     sales: {
         type: Number, 
         default: 0
-    }
+    },
+    totalRating: {
+        type: Number,
+        default: 0
+    },
+    reviews: [reviewSchema]
 }, {
     timestamps: true
 });
