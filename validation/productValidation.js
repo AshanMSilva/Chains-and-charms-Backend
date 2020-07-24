@@ -25,7 +25,7 @@ function validateProductPut(body) {
     // const schema = Joi.object({
     //     productCode: Joi.string().min(3).max(10),
     //     variety: Joi.objectId(),
-    //     category: Joi.objectId(),        
+    //     category: Joi.objectId(),
     //     image: Joi.string().min(3).max(50),
     // })
     const schema = Joi.object({
@@ -49,7 +49,7 @@ async function validateCategory_Variety(category, variety) {
     let ref_errors = [];
     if(category) {
         let category_result = await Categories.findById(category);
-        if (!category_result) ref_errors.push(`A category does not exist by the id ${category}.`);        
+        if (!category_result) ref_errors.push(`A category does not exist by the id ${category}.`);
     }
     if (variety) {
         let variety_result = await Varieties.findById(variety);
@@ -76,27 +76,26 @@ function validateReviewPost(body) {
         name: Joi.string().min(3).max(30).required(),
         email: Joi.string().max(50).required(),
         message: Joi.string().min(3).required(),
-        rating: Joi.number().positive().required(),
-        
+        rating: Joi.number().integer().min(0).max(5).required(),
+
     })
     let {error} = schema.validate(body, {abortEarly: false});
     return get_err_list(error);
 }
 
-function validateUpdateTotalRating(body) {
-    const schema = Joi.object({
-        totalRating: Joi.number().positive().required(),
-        
-    })
-    let {error} = schema.validate(body, {abortEarly: false});
-    return get_err_list(error);
-}
+//function validateUpdateTotalRating(body) {
+//    const schema = Joi.object({
+//        totalRating: Joi.number().integer().min(0).max(5).required(),
+//
+//    })
+//    let {error} = schema.validate(body, {abortEarly: false});
+//    return get_err_list(error);
+//}
 
 module.exports = {
     validateProductPost,
     validateProductPut,
     validateCategory_Variety,
     validateVarientPost,
-    validateReviewPost,
-    validateUpdateTotalRating
+    validateReviewPost
 }
