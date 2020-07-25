@@ -1,4 +1,6 @@
 {
     "secretKey": "e_com_secretKey",
-    "mongoUrl": "e_com_mongoUrl"
+    "mongoUrl": "e_com_mongoUrl",
+    "businessEmail": "e_com_businessEmail",
+    "businessPassword": "e_com_businessPassword"
 }
