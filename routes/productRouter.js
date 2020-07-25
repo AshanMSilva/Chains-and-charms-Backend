@@ -643,7 +643,7 @@ productRouter.route('/:productId/review')
       var reviewsList = product.reviews;
       //console.log(reviewsList);
       var ratingSum = (product.totalRating)*(reviewsList.length);
-      var newRating = (ratingSum + req.body.rating)/(reviewsList.length+1);
+      var newRating = (ratingSum + parseInt(req.body.rating))/(reviewsList.length+1);
       //console.log(newRating);
       reviewsList.push(req.body);
       Products.findByIdAndUpdate(req.params.productId, { reviews:reviewsList,totalRating:newRating}, { new: true })
