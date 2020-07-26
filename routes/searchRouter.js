@@ -19,6 +19,7 @@ searchRouter.route('/product')
     // console.log(req.query);
     Products.find({"name":RegExp(req.query.keyword)})
     .populate('varients')
+    .populate('category')
     .then(products =>{
         res.statusCode =200; 
         res.setHeader('Content-Type', 'application/json');
@@ -48,6 +49,7 @@ searchRouter.route('/category')
     // console.log(req.query);
     Categories.find({"name":RegExp(req.query.keyword)})
     .populate('varients')
+    .populate('category')
     .then(categories =>{
         if(categories){
             res.statusCode =200; 
@@ -80,6 +82,7 @@ searchRouter.route('/brand')
     // console.log(req.query);
     Products.find({"brand":RegExp(req.query.keyword)})
     // .populate('varients')
+    .populate('category')
     .then(products =>{
         if(products){
             res.statusCode =200; 

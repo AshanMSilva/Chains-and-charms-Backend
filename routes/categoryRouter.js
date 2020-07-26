@@ -147,27 +147,7 @@ categoryRouter.route('/:categoryId')
     });
     });
 
-categoryRouter.route('/:categoryId/products')
-.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-.get(cors.cors, (req,res,next) => {   
-    Products.find({'category':req.params.categoryId})
-    // .populate('subCategories')
-    .populate('category')
-    .then((products) => {
-        if (products != null) {  
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            // res.json(category.products);
-            res.json(products);
-        }
-        else {
-            err = new Error('Category ' + req.params.categoryId + ' not found');
-            err.status = 404;
-            return next(err);
-        }
-    }, (err) => next(err))
-    .catch((err) => next(err));
-})
+
 // categoryRouter.route('/:categoryId/products')
 // .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 // .get(cors.cors, (req,res,next) => {   
