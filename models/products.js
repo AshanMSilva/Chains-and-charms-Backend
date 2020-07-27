@@ -105,7 +105,7 @@ var productSchema = new Schema({
         unique: true,
         required: true
     },
-    productName:{
+    name:{
         type: String,
         required: true
     },

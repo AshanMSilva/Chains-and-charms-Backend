@@ -7,7 +7,7 @@ Joi.objectId = require('joi-objectid')(Joi);
 function validateProductPost(body) {
     const schema = Joi.object({
         productCode: Joi.string().min(3).max(10).required(),
-        productName: Joi.string().min(1).max(50).required(),
+        name: Joi.string().min(1).max(50).required(),
         variety: Joi.objectId().required(),
         category: Joi.objectId().required(),
         carotSize: Joi.string().min(1).max(10).required(),
@@ -31,7 +31,7 @@ function validateProductPut(body) {
     // })
     const schema = Joi.object({
         productCode: Joi.string().min(3).max(10),
-        productName: Joi.string().min(1).max(50),
+        name: Joi.string().min(1).max(50),
         variety: Joi.objectId(),
         category: Joi.objectId(),
         carotSize: Joi.string().min(1).max(10),
