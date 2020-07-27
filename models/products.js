@@ -9,7 +9,7 @@ const Schema = mongoose.Schema;
 //     },
 //     value:{
 //         type: String
-       
+
 //     }
 // },{
 //     timestamps: true
@@ -44,7 +44,7 @@ const Schema = mongoose.Schema;
 //     },
 //     image: String,
 //     sales: {
-//         type: Number, 
+//         type: Number,
 //         default: 0
 //     }
 // }, {
@@ -58,20 +58,20 @@ const Schema = mongoose.Schema;
 //         required: true
 //     },
 //     variety:{
-//         type: mongoose.Schema.Types.ObjectId, 
+//         type: mongoose.Schema.Types.ObjectId,
 //         ref: 'Variety'
 //     },
 //     category:{
-//         type: mongoose.Schema.Types.ObjectId, 
+//         type: mongoose.Schema.Types.ObjectId,
 //         ref: 'Category'
-//     },    
+//     },
 //     image: {
 //         type: String,
 //         default: 'default-product.jpg'
 //     },
 //     varients: [varientSchema],
 //     sales: {
-//         type: Number, 
+//         type: Number,
 //         default: 0
 //     }
 // }, {
@@ -105,12 +105,16 @@ var productSchema = new Schema({
         unique: true,
         required: true
     },
+    productName:{
+        type: String,
+        required: true
+    },
     variety:{
-        type: mongoose.Schema.Types.ObjectId, 
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Variety'
     },
     category:{
-        type: mongoose.Schema.Types.ObjectId, 
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Category'
     },
     carotSize: {
@@ -143,7 +147,7 @@ var productSchema = new Schema({
         default: ''
     },
     sales: {
-        type: Number, 
+        type: Number,
         default: 0
     },
     totalRating: {
