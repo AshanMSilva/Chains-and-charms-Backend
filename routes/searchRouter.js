@@ -17,7 +17,7 @@ searchRouter.route('/product')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 .get(cors.cors, (req,res,next) => {
     // console.log(req.query);
-    Products.find({"name":RegExp(req.query.keyword)})
+    Products.find({"name":RegExp(req.query.keyword,"i")})
     .populate('varients')
     .populate('category')
     .then(products =>{
@@ -47,7 +47,7 @@ searchRouter.route('/category')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 .get(cors.cors, (req,res,next) => {
     // console.log(req.query);
-    Categories.find({"name":RegExp(req.query.keyword)})
+    Categories.find({"name":RegExp(req.query.keyword,"i")})
     .populate('varients')
     .populate('category')
     .then(categories =>{
@@ -80,7 +80,7 @@ searchRouter.route('/brand')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 .get(cors.cors, (req,res,next) => {
     // console.log(req.query);
-    Products.find({"brand":RegExp(req.query.keyword)})
+    Products.find({"brand":RegExp(req.query.keyword,"i")})
     // .populate('varients')
     .populate('category')
     .then(products =>{
