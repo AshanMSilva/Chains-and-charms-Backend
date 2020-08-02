@@ -19,43 +19,43 @@ var contactDetails = new Schema({
         required: true
     },
     bill_to_address_line1:{
-        type: Number,
+        type: String,
         required: true
     },
     bill_to_address_city:{
-        type: Number,
+        type: String,
         required: true
     },
     bill_to_address_state:{
-        type: Number,
+        type: String,
         required: true
     },
     bill_to_address_country:{
-        type: Number,
+        type: String,
         required: true
     },
     bill_to_address_postal_code:{
-        type: Number,
+        type: String,
         required: true
     },
     ship_to_address_line1:{
-        type: Number,
+        type: String,
         required: true
     },
     ship_to_address_city:{
-        type: Number,
+        type: String,
         required: true
     },
     ship_to_address_state:{
-        type: Number,
+        type: String,
         required: true
     },
     ship_to_address_country:{
-        type: Number,
+        type: String,
         required: true
     },
     ship_to_address_postal_code:{
-        type: Number,
+        type: String,
         required: true
     },
 });
