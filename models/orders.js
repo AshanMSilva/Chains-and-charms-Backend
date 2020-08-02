@@ -1,27 +1,63 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-var addressSchema = new Schema({
-    houseNumber:{
+var contactDetails = new Schema({
+    bill_to_forename:{
         type: String,
         required: true
     },
-    firstStreet:{
+    bill_to_surname:{
         type: String,
         required: true
     },
-    city:{
+    bill_to_email:{
         type: String,
         required: true
     },
-    state:{
+    bill_to_phone:{
         type: String,
         required: true
     },
-    zipCode:{
+    bill_to_address_line1:{
         type: Number,
-
-    }
+        required: true
+    },
+    bill_to_address_city:{
+        type: Number,
+        required: true
+    },
+    bill_to_address_state:{
+        type: Number,
+        required: true
+    },
+    bill_to_address_country:{
+        type: Number,
+        required: true
+    },
+    bill_to_address_postal_code:{
+        type: Number,
+        required: true
+    },
+    ship_to_address_line1:{
+        type: Number,
+        required: true
+    },
+    ship_to_address_city:{
+        type: Number,
+        required: true
+    },
+    ship_to_address_state:{
+        type: Number,
+        required: true
+    },
+    ship_to_address_country:{
+        type: Number,
+        required: true
+    },
+    ship_to_address_postal_code:{
+        type: Number,
+        required: true
+    },
 });
 
 var paymentDetailsSchema = new Schema({
@@ -33,7 +69,7 @@ var paymentDetailsSchema = new Schema({
 
 var itemSchema = new Schema({
     
-    product:{
+    product_id:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product'
     },
@@ -42,16 +78,20 @@ var itemSchema = new Schema({
         required: true,
         min: 0
     },
-    cost:{
-        type: Number,
-        required: true,
-        min: 0
-    }
+    // cost:{
+    //     type: Number,
+    //     required: true,
+    //     min: 0
+    // }
 });
 
 var orderSchema = new Schema({
+    reference_number:{
+        type: String,
+        required:true
+    },
     orderItems:[itemSchema],
-    cost:{
+    amount:{
         type: Number,
         required:true
     },
@@ -59,16 +99,23 @@ var orderSchema = new Schema({
         type: String,
         default: 'Proccessing'
     },
+    shipToDifferent: {
+        type: Boolean,
+        default: false
+    },
     orderedDate: {
         type: Date,
         default: Date.now()
+    },
+    orderNotes: {
+        type: String,
+        default: 'None'
     },
     expiredDate:{
         type: Date,
         default: +new Date() + 60*24*60*60*1000
     },
-    deliveryAddress: addressSchema,
-    paymentDetails: paymentDetailsSchema
+    contactDetails: contactDetails,
 }, {
     timestamps: true
 });
