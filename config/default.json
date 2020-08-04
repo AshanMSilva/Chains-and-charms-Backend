@@ -1,6 +1,6 @@
 {
     "secretKey": "12345-67890-09876-54321",
-    "mongoUrl": "mongodb://localhost:27017/Chains-and-charms-Server",
+    "mongoUrl": "mongodb+srv://roux-user:roux12345@roux-cluster.yjsak.mongodb.net/roux-db?retryWrites=true&w=majority",
     "businessEmail": "rouxandglamour@gmail.com",
     "businessPassword": "roux12345",
     "s3Bucket": "roux-images",
