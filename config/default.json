@@ -2,5 +2,8 @@
     "secretKey": "12345-67890-09876-54321",
     "mongoUrl": "mongodb://localhost:27017/Chains-and-charms-Server",
     "businessEmail": "rouxandglamour@gmail.com",
-    "businessPassword": "roux12345"
+    "businessPassword": "roux12345",
+    "s3Bucket": "roux-images",
+    "s3AccessKey": "AKIAT4VJIS3G6B5X3ZTL",
+    "s3SecretKey": "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"
 }

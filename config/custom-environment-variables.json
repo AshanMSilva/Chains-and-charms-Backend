@@ -2,5 +2,8 @@
     "secretKey": "e_com_secretKey",
     "mongoUrl": "e_com_mongoUrl",
     "businessEmail": "e_com_businessEmail",
-    "businessPassword": "e_com_businessPassword"
+    "businessPassword": "e_com_businessPassword",
+    "s3Bucket": "e_com_s3Bucket",
+    "s3AccessKey": "e_com_s3AccessKey",
+    "s3SecretKey": "e_com_s3SecretKey"
 }
