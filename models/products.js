@@ -123,7 +123,7 @@ var productSchema = new Schema({
     },
     image: {
         type: String,
-        default: 'default-product.jpg'
+        default: 'products/default-product.jpg'
     },
     price:{
         type: Number,

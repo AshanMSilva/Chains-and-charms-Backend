@@ -11,7 +11,7 @@ var Admin = new Schema({
     },
     image: {
         type: String,
-        default:'default-avatar.png'
+        default:'profilePictures/default-avatar.png'
     }
     
 });

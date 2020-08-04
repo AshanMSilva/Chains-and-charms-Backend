@@ -10,7 +10,8 @@ var categorySchema = new Schema({
         unique: true
     },
     image: {
-        type: String
+        type: String,
+        default: 'categories/default-category.jpg'
     }
     // products: [{
     //    type: mongoose.Schema.Types.ObjectId,

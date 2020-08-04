@@ -9,7 +9,7 @@ var varietySchema = new Schema({
     },
     image: {
         type: String,
-        default: 'default-variety.png'
+        default: 'varieties/default-variety.png'
     }
 }, {
     timestamps: true
