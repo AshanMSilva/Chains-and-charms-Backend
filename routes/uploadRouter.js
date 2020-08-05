@@ -216,7 +216,7 @@ uploadRouter.route('/product/:id')
     //     res.setHeader('Content-Type', 'application/json');
     //     res.status(200).json({filename: `${req.params.id}.${info.format}`});
     // })
-    resizeAndSave(1000, 1000, 'fill', 1, req.file)
+    resizeAndSave(438, 438, 'fill', 1, req.file)
     .then(data => {
         s3Upload(Key, data, req.file.mimetype, res);
     })
