@@ -68,7 +68,7 @@ var paymentDetailsSchema = new Schema({
 });
 
 var itemSchema = new Schema({
-    
+
     product_id:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product'
@@ -88,7 +88,8 @@ var itemSchema = new Schema({
 var orderSchema = new Schema({
     reference_number:{
         type: String,
-        required:true
+        required:true,
+        unique : true
     },
     orderItems:[itemSchema],
     amount:{
