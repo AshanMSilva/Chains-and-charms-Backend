@@ -15,6 +15,7 @@ var adminRouter = require('./routes/adminRouter');
 var categoryRouter = require('./routes/categoryRouter');
 var productRouter = require('./routes/productRouter');
 var orderRouter = require('./routes/orderRouter');
+var orderConfirmRouter = require('./routes/orderConfirmRouter');
 // var varientRouter = require('./routes/varientRouter');
 var uploadRouter = require('./routes/uploadRouter');
 var mailRouter = require('./routes/mailRouter');
@@ -34,7 +35,7 @@ const feedbacks = require('./models/feedbacks');
 // const url = 'mongodb://localhost:27017/conFusion';
 const url = config.mongoUrl;
 mongoose.connect(url, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true, useFindAndModify: false})
-    .then(() => console.log(`Connected to DB ${url}`))  
+    .then(() => console.log(`Connected to DB ${url}`))
     .catch(err => {
         console.log(`Couldn't connect to DB ${url}`);
         console.log(err);
@@ -73,6 +74,7 @@ app.use('/mail', mailRouter);
 app.use('/search', searchRouter);
 app.use('/varieties', varietyRouter);
 app.use('/contact', contactRouter);
+app.use('/orderconfirm', orderConfirmRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
