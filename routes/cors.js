@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 
-const whitelist = ['http://localhost:3000', 'https://localhost:3443', 'http://localhost:4200', 'http://localhost:4201', 'https://rouxandglamour.herokuapp.com', 'https://rouxandglamourdashboard.herokuapp.com','https://rouxandglamour.com','https://www.rouxandglamour.com'];
+const whitelist = ['http://localhost:3000', 'https://localhost:3443', 'http://localhost:4200', 'http://localhost:4201', 'https://rouxandglamour.herokuapp.com', 'https://rouxandglamourdashboard.herokuapp.com','https://rouxandglamour.com','https://www.rouxandglamour.com','https://ubctest.cybersource.com','https://ubc.cybersource.com'];
 var corsOptionsDelegate = (req, callback) => {
     var corsOptions;
     // console.log(req.header('Origin'));
