@@ -100,6 +100,10 @@ var orderSchema = new Schema({
         type: String,
         default: 'Proccessing'
     },
+    deliveryStatus:{
+        type: String,
+        default: "Pending"
+    },
     shipToDifferent: {
         type: Boolean,
         default: false

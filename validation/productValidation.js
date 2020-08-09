@@ -41,6 +41,7 @@ function validateProductPut(body) {
         availability: Joi.number().integer().min(0),
         color: Joi.string().valid('gold', 'silver'),
         size: Joi.string().max(25),
+        deliveryStatus: Joi.string().valid('Pending', 'Delivered'),
         totalRating: Joi.number().positive()
     })
     let {error} = schema.validate(body, {abortEarly: false});
