@@ -15,6 +15,7 @@ orderRouter.route('/')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 .get(cors.cors, (req,res,next) => {
     Orders.find(req.query)
+    .populate('orderItems.product_id')
     .then(orders =>{
         res.statusCode =200;
         res.setHeader('Content-Type', 'application/json');
@@ -58,6 +59,7 @@ orderRouter.route('/:orderId')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 .get(cors.cors, (req,res,next) => {
     Orders.findById(req.params.orderId)
+    .populate('orderItems.product_id')
     .then(order =>{
         res.statusCode =200;
         res.setHeader('Content-Type', 'application/json');
@@ -107,6 +109,7 @@ orderRouter.route('/:orderId/orderItems')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 .get(cors.cors, (req,res,next) => {
     Orders.findById(req.params.orderId)
+    .populate('orderItems.product_id')
     .then((order) => {
         if (order != null) {
             res.statusCode = 200;
@@ -177,6 +180,7 @@ orderRouter.route('/:orderId/orderItems/:itemId')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 .get(cors.cors, (req,res,next) => {
     Orders.findById(req.params.orderId)
+    .populate('orderItems.product_id')
     .then((order) => {
         if (order != null && order.orderItems.id(req.params.itemId) != null) {
 
