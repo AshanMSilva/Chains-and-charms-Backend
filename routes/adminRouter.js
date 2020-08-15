@@ -50,7 +50,7 @@ adminRouter.get('/checkJWTtoken', cors.corsWithOptions, (req, res) => {
     }) (req, res);
   });
 
-adminRouter.post('/signup', cors.corsWithOptions, (req, res, next) => {
+adminRouter.post('/signup', cors.corsWithOptions, authenticate.verifyAdmin, (req, res, next) => {
     let err_list = validater.validateAdminSignUp(req.body);
     if (err_list.length) return res.status(400).send({err: err_list});
 
