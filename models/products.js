@@ -129,6 +129,14 @@ var productSchema = new Schema({
         type: Number,
         required: true
     },
+    isDiscountApplied:{
+        type: Boolean,
+        default: false
+    },
+    oldPrice:{
+        type: Number,
+        required: false
+    },
     availability: {
         type: Number,
         required: true

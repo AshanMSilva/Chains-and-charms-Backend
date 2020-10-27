@@ -16,7 +16,9 @@ function validateProductPost(body) {
         price: Joi.number().positive().required(),
         availability: Joi.number().integer().min(0).required(),
         color: Joi.string().valid('gold', 'silver').required(),
-        size: Joi.string().max(25)
+        size: Joi.string().max(25),
+        oldPrice: Joi.number(),
+        isDiscountApplied: Joi.boolean()
     })
     let {error} = schema.validate(body, {abortEarly: false});
     return get_err_list(error);
@@ -42,7 +44,9 @@ function validateProductPut(body) {
         color: Joi.string().valid('gold', 'silver'),
         size: Joi.string().max(25),
         deliveryStatus: Joi.string().valid('Pending', 'Delivered'),
-        totalRating: Joi.number().positive()
+        totalRating: Joi.number().positive(),
+        oldPrice: Joi.number(),
+        isDiscountApplied: Joi.boolean()
     })
     let {error} = schema.validate(body, {abortEarly: false});
     return get_err_list(error);
