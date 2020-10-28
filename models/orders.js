@@ -98,7 +98,7 @@ var orderSchema = new Schema({
     },
     status: {
         type: String,
-        enum: ['Proccessing', 'ACCEPT', 'ERROR', 'DECLINE', 'CANCEL'],
+        enum: ['Proccessing', 'ACCEPT', 'ERROR', 'DECLINE', 'CANCEL','cash_on_delivery'],
         default: 'Proccessing'
     },
     deliveryStatus:{
