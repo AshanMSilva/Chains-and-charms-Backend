@@ -1,132 +1,133 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 var contactDetails = new Schema({
-    bill_to_forename:{
-        type: String,
-        required: true
-    },
-    bill_to_surname:{
-        type: String,
-        required: true
-    },
-    bill_to_email:{
-        type: String,
-        required: true
-    },
-    bill_to_phone:{
-        type: String,
-        required: true
-    },
-    bill_to_address_line1:{
-        type: String,
-        required: true
-    },
-    bill_to_address_city:{
-        type: String,
-        required: true
-    },
-    bill_to_address_state:{
-        type: String,
-        required: true
-    },
-    bill_to_address_country:{
-        type: String,
-        required: true
-    },
-    bill_to_address_postal_code:{
-        type: String,
-        required: true
-    },
-    ship_to_address_line1:{
-        type: String,
-        required: true
-    },
-    ship_to_address_city:{
-        type: String,
-        required: true
-    },
-    ship_to_address_state:{
-        type: String,
-        required: true
-    },
-    ship_to_address_country:{
-        type: String,
-        required: true
-    },
-    ship_to_address_postal_code:{
-        type: String,
-        required: true
-    },
-});
-
-var paymentDetailsSchema = new Schema({
-    cardNumber:{
-        type: String,
-        required: true
-    }
+  bill_to_forename: {
+    type: String,
+    required: true,
+  },
+  bill_to_surname: {
+    type: String,
+    required: true,
+  },
+  bill_to_email: {
+    type: String,
+    required: true,
+  },
+  bill_to_phone: {
+    type: String,
+    required: true,
+  },
+  bill_to_address_line1: {
+    type: String,
+    required: true,
+  },
+  bill_to_address_city: {
+    type: String,
+    required: true,
+  },
+  bill_to_address_state: {
+    type: String,
+    required: true,
+  },
+  bill_to_address_country: {
+    type: String,
+    required: true,
+  },
+  bill_to_address_postal_code: {
+    type: String,
+    required: true,
+  },
+  ship_to_address_line1: {
+    type: String,
+    required: true,
+  },
+  ship_to_address_city: {
+    type: String,
+    required: true,
+  },
+  ship_to_address_state: {
+    type: String,
+    required: true,
+  },
+  ship_to_address_country: {
+    type: String,
+    required: true,
+  },
+  ship_to_address_postal_code: {
+    type: String,
+    required: true,
+  },
 });
 
 var itemSchema = new Schema({
-
-    product_id:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product'
-    },
-    quantity: {
-        type: Number,
-        required: true,
-        min: 0
-    },
-    // cost:{
-    //     type: Number,
-    //     required: true,
-    //     min: 0
-    // }
+  product_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Product",
+  },
+  quantity: {
+    type: Number,
+    required: true,
+    min: 0,
+  },
+  // cost:{
+  //     type: Number,
+  //     required: true,
+  //     min: 0
+  // }
 });
 
-var orderSchema = new Schema({
-    reference_number:{
-        type: String,
-        required:true,
-        unique : true
+var orderSchema = new Schema(
+  {
+    reference_number: {
+      type: String,
+      required: true,
+      unique: true,
     },
-    orderItems:[itemSchema],
-    amount:{
-        type: Number,
-        required:true
+    orderItems: [itemSchema],
+    amount: {
+      type: Number,
+      required: true,
     },
     status: {
-        type: String,
-        enum: ['Proccessing', 'ACCEPT', 'ERROR', 'DECLINE', 'CANCEL','cash_on_delivery'],
-        default: 'Proccessing'
+      type: String,
+      enum: [
+        "Proccessing",
+        "ACCEPT",
+        "ERROR",
+        "DECLINE",
+        "CANCEL",
+        "cash_on_delivery",
+      ],
+      default: "Proccessing",
     },
-    deliveryStatus:{
-        type: String,
-        default: "Pending"
+    deliveryStatus: {
+      type: String,
+      default: "Pending",
     },
     shipToDifferent: {
-        type: Boolean,
-        default: false
+      type: Boolean,
+      default: false,
     },
     orderedDate: {
-        type: Date,
-        default: Date.now()
+      type: Date,
+      default: Date.now(),
     },
     orderNotes: {
-        type: String,
-        default: 'None'
+      type: String,
+      default: "None",
     },
-    expiredDate:{
-        type: Date,
-        default: +new Date() + 60*24*60*60*1000
+    expiredDate: {
+      type: Date,
+      default: +new Date() + 60 * 24 * 60 * 60 * 1000,
     },
     contactDetails: contactDetails,
-}, {
-    timestamps: true
-});
+  },
+  {
+    timestamps: true,
+  }
+);
 
-
-var Orders = mongoose.model('Order', orderSchema);
+var Orders = mongoose.model("Order", orderSchema);
 
 module.exports = Orders;
